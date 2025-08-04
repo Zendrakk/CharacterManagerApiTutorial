@@ -2,6 +2,7 @@
 using CharacterManagerApiTutorial.Services;
 using CharacterManagerApiTutorial.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CharacterManagerApiTutorial.Tests
 {
@@ -481,7 +482,7 @@ namespace CharacterManagerApiTutorial.Tests
             AddRaceClassMappings(context);
 
             // Return a new instance of the CharacterService using the test context
-            return new CharacterService(context);
+            return new CharacterService(context, NullLogger<CharacterService>.Instance);
         }
 
 

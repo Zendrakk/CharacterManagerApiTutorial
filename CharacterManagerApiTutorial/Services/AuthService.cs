@@ -11,30 +11,45 @@ using System.Text;
 
 namespace CharacterManagerApiTutorial.Services
 {
-    public class AuthService(CharacterManagerDbContext context, IConfiguration configuration) : IAuthService
+    public class AuthService(CharacterManagerDbContext context, IConfiguration configuration, ILogger<AuthService> logger) : IAuthService
     {
         private readonly CharacterManagerDbContext _context = context;
+        private readonly ILogger<AuthService> _logger = logger;
 
         public async Task<Result<User>> RegisterAsync(UserDto request)
         {
+            _logger.LogInformation("Register attempt for user: {Username}", request?.Username);
+
             // Step 1: Check to see if object is null.
             if (request is null)
+            {
+                _logger.LogWarning("Register failed: Request was null.");
                 return Result<User>.Failure("Request is null.");
+            }
 
             // Step 2: Normalize strings.
             request.Username = request.Username.Trim().ToLower();
 
             // Step 3: Check to see if either property is null or white space.
             if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
+            {
+                _logger.LogWarning("Register failed: Username or password was empty.");
                 return Result<User>.Failure("Username and password are required.");
+            }
 
             // Step 4: Verify username length does not exceed maximum allowed length (20).
             if (request.Username.Length > 20)
+            {
+                _logger.LogWarning("Register failed: Username '{Username}' exceeded max length.", request.Username);
                 return Result<User>.Failure("Username must not exceed 20 characters.");
+            }
 
             // Step 5: Check if a user with the same username already exists in the database
             if (await _context.Users.AnyAsync(u => u.Username == request.Username))
+            {
+                _logger.LogWarning("Register failed: Username '{Username}' already exists.", request.Username);
                 return Result<User>.Failure("Username already exists.");
+            }
 
             // Step 6: Create User object
             var user = new User();
@@ -52,10 +67,12 @@ namespace CharacterManagerApiTutorial.Services
             {
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("User '{Username}' successfully registered.", user.Username);
                 return Result<User>.Success(user);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Failed to register user '{Username}'.", user.Username);
                 return Result<User>.Failure($"Failed to register user: {ex.Message}");
             }
         }
@@ -63,13 +80,21 @@ namespace CharacterManagerApiTutorial.Services
 
         public async Task<Result<TokenResponseDto>> LoginAsync(UserDto request)
         {
+            _logger.LogInformation("Login attempt for user: {Username}", request?.Username);
+
             // Step 1: Check to see if object is null.
             if (request is null)
+            {
+                _logger.LogWarning("Login failed: Request was null.");
                 return Result<TokenResponseDto>.Failure("Request is null.");
+            }
 
             // Step 2: Check to see if either property is null or white space.
             if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
+            {
+                _logger.LogWarning("Login failed: Username or password was empty.");
                 return Result<TokenResponseDto>.Failure("Username and password are required.");
+            }
 
             // Step 3: Normalize strings.
             request.Username = request.Username.Trim().ToLower();
@@ -79,16 +104,23 @@ namespace CharacterManagerApiTutorial.Services
 
             // Step 5: If user is not found or the password does not match, return a failure
             if (user is null || new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
+            {
+                _logger.LogWarning("Login failed for user: {Username}", request.Username);
                 return Result<TokenResponseDto>.Failure("Invalid username or password.");
+            }
 
             // Step 6: Create a new access token and refresh token for the user
             var tokenResponse = await CreateTokenResponse(user);
 
             // Step 7: If refresh token saving fails, return an error
             if (tokenResponse is null)
+            {
+                _logger.LogError("Login failed: Token creation failed for user: {Username}", user.Username);
                 return Result<TokenResponseDto>.Failure("Issue with saving Refresh Token.");
+            }
 
             // Step 8: Return a successful result with the token response
+            _logger.LogInformation("User '{Username}' successfully logged in.", user.Username);
             return Result<TokenResponseDto>.Success(tokenResponse);
         }
 
@@ -98,25 +130,37 @@ namespace CharacterManagerApiTutorial.Services
         /// </summary>
         public async Task<Result<TokenResponseDto>> RefreshTokensAsync(RefreshTokenRequestDto request)
         {
+            _logger.LogInformation("Refresh token request for user ID: {UserId}", request?.UserId);
+
             // Step 1: Check for null/invalid input before hitting the database
             if (request is null || request.UserId == Guid.Empty || string.IsNullOrWhiteSpace(request.RefreshToken))
+            {
+                _logger.LogWarning("Refresh failed: Invalid request.");
                 return Result<TokenResponseDto>.Failure("Invalid request.");
+            }
 
             // Step 2: Validate the refresh token and ensure it matches the user and hasn't expired
             var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
 
             // Step 3: If validation fails, return a failure result
             if (user is null)
+            {
+                _logger.LogWarning("Refresh failed: Invalid or expired refresh token for user ID: {UserId}", request.UserId);
                 return Result<TokenResponseDto>.Failure("Invalid refresh token.");
+            }
 
             // Step 4: Generate new access token and refresh token for the user
             var tokenResponse = await CreateTokenResponse(user);
 
             // Step 5: If token creation fails (e.g., refresh token couldn't be saved), return an error
             if (tokenResponse is null)
+            {
+                _logger.LogError("Refresh failed: Unable to create new token for user ID: {UserId}", user.Id);
                 return Result<TokenResponseDto>.Failure("Issue with saving Refresh Token.");
+            }
 
             // Step 6: Return a success result with the new token data
+            _logger.LogInformation("Refresh token succeeded for user ID: {UserId}", user.Id);
             return Result<TokenResponseDto>.Success(tokenResponse);
         }
 
@@ -187,10 +231,12 @@ namespace CharacterManagerApiTutorial.Services
             try
             {
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Refresh token updated for user: {UserId}", user.Id);
                 return refreshToken;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Failed to save refresh token for user: {UserId}", user.Id);
                 return null;
             }
         }

@@ -2,6 +2,7 @@
 using CharacterManagerApiTutorial.Services;
 using CharacterManagerApiTutorial.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CharacterManagerApiTutorial.Tests
 {
@@ -220,7 +221,7 @@ namespace CharacterManagerApiTutorial.Tests
                 AddRealms(context);
 
             // Return a new instance of the CharacterService using the test context
-            return new CharacterMetadataService(context);
+            return new CharacterMetadataService(context, NullLogger<CharacterMetadataService>.Instance);
         }
 
 

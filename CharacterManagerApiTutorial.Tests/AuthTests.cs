@@ -4,6 +4,7 @@ using CharacterManagerApiTutorial.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CharacterManagerApiTutorial.Tests
 {
@@ -379,7 +380,7 @@ namespace CharacterManagerApiTutorial.Tests
             var config = ConfigurationBuilder();
 
             // Return a new instance of the AuthService using the test context and config
-            return new AuthService(context, config);
+            return new AuthService(context, config, NullLogger<AuthService>.Instance);
         }
 
 

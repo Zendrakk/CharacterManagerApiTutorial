@@ -248,7 +248,7 @@ namespace CharacterManagerApiTutorial.Services
             // Step 3: Return failure if the character does not exist
             if (character is null)
             {
-                _logger.LogWarning("Deleting character failed for {userGuid}: character not found or access denied", userGuid);
+                _logger.LogWarning("Deleting character ID {id} failed for {userGuid}: character not found or access denied", id, userGuid);
                 return Result<int>.Failure("Character not found or access denied.");
             }
 
@@ -256,7 +256,7 @@ namespace CharacterManagerApiTutorial.Services
             {
                 _context.Characters.Remove(character);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Attempting to delete character ID {CharacterId} for user {UserGuid}", id, userGuid);
+                _logger.LogInformation("Deleting character ID {CharacterId} for user {UserGuid}", id, userGuid);
                 return Result<int>.Success(id);
             }
             catch (Exception ex)

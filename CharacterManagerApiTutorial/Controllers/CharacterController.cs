@@ -9,9 +9,11 @@ namespace CharacterManagerApiTutorial.Controllers
     [Route("api/[controller]")]
     [Authorize(Roles = "user")]
     [ApiController]
-    public class CharacterController(ICharacterService characterService) : ControllerBase
+    public class CharacterController(ICharacterService characterService, ILogger<AuthService> logger) : ControllerBase
     {
         private readonly ICharacterService _characterService = characterService;
+        private readonly ILogger<AuthService> _logger = logger;
+
 
         // GET: api/character
         [HttpGet]
@@ -21,9 +23,14 @@ namespace CharacterManagerApiTutorial.Controllers
             if (userId is null || !Guid.TryParse(userId, out var userGuid) || userGuid == Guid.Empty)
                 return Unauthorized();
 
+            _logger.LogInformation("GetCharacters attempt for user ID: {UserGuid}", userGuid);
+
             var result = await _characterService.GetCharactersAsync(userGuid);
             if (!result.IsSuccess)
+            {
+                _logger.LogWarning("Service failed to get all characters with the following error: {Error}", result.Error);
                 return NotFound(result.Error);
+            }
 
             return Ok(result.Value);
         }
@@ -36,9 +43,14 @@ namespace CharacterManagerApiTutorial.Controllers
             if (userId is null || !Guid.TryParse(userId, out var userGuid) || userGuid == Guid.Empty)
                 return Unauthorized();
 
+            _logger.LogInformation("GetCharacterById attempt for user ID: {UserGuid}", userGuid);
+
             var result = await _characterService.GetCharacterByIdAsync(id, userGuid);
             if (!result.IsSuccess)
+            {
+                _logger.LogWarning("Service failed to get character by ID with the following error: {Error}", result.Error);
                 return NotFound(result.Error);
+            }
 
             return Ok(result.Value);
         }
@@ -51,18 +63,16 @@ namespace CharacterManagerApiTutorial.Controllers
             if (userId is null || !Guid.TryParse(userId, out var userGuid) || userGuid == Guid.Empty)
                 return Unauthorized();
 
+            _logger.LogInformation("CreateCharacter attempt for user ID: {UserGuid}", userGuid);
+
             var result = await _characterService.CreateCharacterAsync(newCharacter, userGuid);
             if (!result.IsSuccess)
+            {
+                _logger.LogWarning("Service failed to create character with the following error: {Error}", result.Error);
                 return BadRequest(result.Error);
+            }
 
-            if (result.IsSuccess && result.Value != null)
-            {
-                return CreatedAtAction(nameof(GetCharacterById), new { id = result.Value.Id }, result.Value);
-            }
-            else
-            {
-                return BadRequest(result.Error);
-            }
+            return CreatedAtAction(nameof(GetCharacterById), new { id = result.Value!.Id }, result.Value);
         }
 
         // PUT: api/character/5
@@ -73,9 +83,14 @@ namespace CharacterManagerApiTutorial.Controllers
             if (userId is null || !Guid.TryParse(userId, out var userGuid) || userGuid == Guid.Empty)
                 return Unauthorized();
 
+            _logger.LogInformation("UpdateCharacter attempt for user ID: {UserGuid}", userGuid);
+
             var result = await _characterService.UpdateCharacterAsync(id, updatedCharacter, userGuid);
             if (!result.IsSuccess)
+            {
+                _logger.LogWarning("Service failed to update character {id} with the following error: {Error}", id, result.Error);
                 return BadRequest(result.Error);
+            }
 
             return NoContent(); // or Ok() if you prefer returning a status
         }
@@ -88,9 +103,14 @@ namespace CharacterManagerApiTutorial.Controllers
             if (userId is null || !Guid.TryParse(userId, out var userGuid) || userGuid == Guid.Empty)
                 return Unauthorized();
 
+            _logger.LogInformation("DeleteCharacter attempt for user ID: {UserGuid}", userGuid);
+
             var result = await _characterService.DeleteCharacterAsync(id, userGuid);
             if (!result.IsSuccess)
+            {
+                _logger.LogWarning("Service failed to delete character {id} with the following error: {Error}", id, result.Error);
                 return NotFound(result.Error);
+            }
 
             return Ok(new { deletedId = result.Value });
         }

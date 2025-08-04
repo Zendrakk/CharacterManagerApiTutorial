@@ -1,10 +1,11 @@
-﻿using CharacterManagerApiTutorial.Models;
+﻿using CharacterManagerApiTutorial.Data;
+using CharacterManagerApiTutorial.Models;
 using CharacterManagerApiTutorial.Services;
-using CharacterManagerApiTutorial.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
+using Moq;
 
-namespace CharacterManagerApiTutorial.Tests
+namespace CharacterManagerApiTutorial.Tests.Services
 {
     public class CharacterTests
     {
@@ -16,7 +17,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetCharacters_EmptyUserGuid_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out _);
             var userGuid = Guid.NewGuid();
             context.Characters.AddRange(
                 new Character { Id = 1, Name = "tester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid },
@@ -39,7 +40,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetCharacters_ValidRequest_ReturnsSuccess()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out var mockLogger);
             var userGuid = Guid.NewGuid();
             context.Characters.AddRange(
                 new Character { Id = 1, Name = "tester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid },
@@ -57,6 +58,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.Equal(2, result.Value.Count);
             Assert.Contains(result.Value, c => c.Name == "tester" && c.UserId == userGuid);
             Assert.Contains(result.Value, c => c.Name == "tester2" && c.UserId == userGuid);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Fetching characters for user ID: " + userGuid.ToString() + "")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
         [Fact]
@@ -64,7 +74,7 @@ namespace CharacterManagerApiTutorial.Tests
         {
             // Arrange
             var userGuid = Guid.NewGuid();
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out var mockLogger);
 
             // Act
             var result = await characterService.GetCharactersAsync(userGuid);
@@ -74,6 +84,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.NotNull(result.Value);
             Assert.IsType<Result<List<Character>>>(result);
             Assert.Empty(result.Value);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Fetching characters for user ID: " + userGuid.ToString() + "")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -85,7 +104,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetCharacterById_InvalidId_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out _);
             var userGuid = Guid.NewGuid();
             context.Characters.Add(new Character { Id = 1, Name = "tester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid });
             await context.SaveChangesAsync();
@@ -104,7 +123,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetCharacterById_InvalidUserGuid_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out _);
             var userGuid = Guid.NewGuid();
             context.Characters.Add(new Character { Id = 1, Name = "tester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid });
             await context.SaveChangesAsync();
@@ -123,7 +142,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetCharacterById_ValidRequest_ReturnsSuccess()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out var mockLogger);
             var userGuid = Guid.NewGuid();
             context.Characters.Add(new Character { Id = 1, Name = "Tester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid });
             await context.SaveChangesAsync();
@@ -137,6 +156,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.IsType<Result<Character>>(result);
             Assert.Equal("Tester", result.Value.Name);
             Assert.Equal(userGuid, result.Value.UserId);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Fetching character " + result.Value.Id.ToString() + " for user ID: " + userGuid.ToString() + "")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -148,7 +176,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task CreateCharacter_NullRequest_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "Tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
             newCharacter = null;
@@ -166,7 +194,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task CreateCharacter_InvalidFactionToRace_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "Tester", Level = 10, FactionId = 2, RaceId = 1, ClassId = 1, RealmId = 1 };
 
@@ -183,7 +211,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task CreateCharacter_InvalidRaceToClass_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "Tester", Level = 30, FactionId = 1, RaceId = 2, ClassId = 3, RealmId = 1 };
 
@@ -200,7 +228,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task CreateCharacter_InvalidNameLength_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "TesterTesterTester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
@@ -217,7 +245,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task CreateCharacter_InvalidLevel_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "Tester", Level = 0, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
@@ -234,7 +262,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task CreateCharacter_DuplicateName_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "Tester", Level = 30, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 2 };
             var newCharacter2 = new Character { Id = 2, Name = "Tester", Level = 20, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 2 };
@@ -255,7 +283,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task CreateCharacter_InvalidUserGuid_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out _, out _);
             var newCharacter = new Character { Id = 1, Name = "Tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
             // Act
@@ -271,7 +299,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task CreateCharacter_ValidRequest_ReturnsSuccess()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out _, out var mockLogger);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "Tester", Level = 20, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
@@ -285,6 +313,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.Equal("tester", result.Value.Name);
             Assert.Equal(1, result.Value.RealmId);
             Assert.Equal(userGuid, result.Value.UserId);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Creating new character " + result.Value.Name + " for user ID: " + userGuid.ToString() + "")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -296,7 +333,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task UpdateCharacter_InvalidUserGuid_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid };
             context.Characters.Add(newCharacter);
@@ -315,7 +352,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task UpdateCharacter_UserGuidDoesNotMatch_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid };
             context.Characters.Add(newCharacter);
@@ -334,7 +371,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task UpdateCharacter_InvalidRealmId_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid };
             context.Characters.Add(newCharacter);
@@ -355,7 +392,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task UpdateCharacter_ModifyCharacterValues_ReturnsSuccess()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out var mockLogger);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid };
             context.Characters.Add(newCharacter);
@@ -380,6 +417,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.Equal(4, updated.RaceId);
             Assert.Equal(2, updated.ClassId);
             Assert.Equal(5, updated.RealmId);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Updated character with ID " + newCharacter.Id + " for user ID: " + userGuid.ToString() + "")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -391,7 +437,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task DeleteCharacter_InvalidCharacterId_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid };
             context.Characters.Add(newCharacter);
@@ -410,7 +456,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task DeleteCharacter_InvalidUserGuid_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid };
             context.Characters.Add(newCharacter);
@@ -429,7 +475,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task DeleteCharacter_IncorrectUserGuid_ReturnsFailure()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid };
             context.Characters.Add(newCharacter);
@@ -448,7 +494,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task DeleteCharacter_ValidRequest_ReturnsSuccess()
         {
             // Arrange
-            var characterService = CreateCharacterService(out var context);
+            var characterService = CreateCharacterService(out var context, out var mockLogger);
             var userGuid = Guid.NewGuid();
             context.Characters.Add(new Character { Id = 1, Name = "Tester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid });
             await context.SaveChangesAsync();
@@ -461,6 +507,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.True(result.IsSuccess, "Deletion should succeed.");
             Assert.Equal(1, result.Value);
             Assert.IsType<Result<int>>(result);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Deleted character ID " + result.Value + " for user ID: " + userGuid.ToString() + "")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -472,17 +527,20 @@ namespace CharacterManagerApiTutorial.Tests
         /// <summary>
         /// Creates an instance of <see cref="CharacterService"/> using an in-memory database context.
         /// </summary>
-        private static CharacterService CreateCharacterService(out CharacterManagerDbContext context)
+        private static CharacterService CreateCharacterService(out CharacterManagerDbContext context, out Mock<ILogger<CharacterService>> mockLogger)
         {
             // Create a new in-memory DbContext for isolated testing
             context = GetInMemoryDbContext();
+
+            // Create a mock logger to verify or suppress log output during tests
+            mockLogger = new Mock<ILogger<CharacterService>>();
 
             // Seeds the provided FantasyGameTutorialDbContext with predefined realm and race/class mappings
             AddRealms(context);
             AddRaceClassMappings(context);
 
             // Return a new instance of the CharacterService using the test context
-            return new CharacterService(context, NullLogger<CharacterService>.Instance);
+            return new CharacterService(context, mockLogger.Object);
         }
 
 

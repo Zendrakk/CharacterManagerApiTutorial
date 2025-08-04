@@ -1,10 +1,11 @@
-﻿using CharacterManagerApiTutorial.Models;
+﻿using CharacterManagerApiTutorial.Data;
+using CharacterManagerApiTutorial.Models;
 using CharacterManagerApiTutorial.Services;
-using CharacterManagerApiTutorial.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
+using Moq;
 
-namespace CharacterManagerApiTutorial.Tests
+namespace CharacterManagerApiTutorial.Tests.Services
 {
     public class CharacterMetadataTests
     {
@@ -16,7 +17,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetFactionTypes_NoneInDatabase_ReturnsFailure()
         {
             // Arrange
-            var characterMetadataService = CreateCharacterMetadataService(out var context);
+            var characterMetadataService = CreateCharacterMetadataService(out _, out _);
 
             // Act
             var result = await characterMetadataService.GetFactionTypesAsync();
@@ -32,7 +33,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetFactionTypes_ValidRequest_ReturnsSuccess()
         {
             // Arrange
-            var characterMetadataService = CreateCharacterMetadataService(out var context, seedFactionTypes: true);
+            var characterMetadataService = CreateCharacterMetadataService(out var context, out var mockLogger, seedFactionTypes: true);
 
             // Act
             var result = await characterMetadataService.GetFactionTypesAsync();
@@ -41,6 +42,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value);
             Assert.IsType<Result<List<FactionType>>>(result);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Successfully retrieved " + result.Value.Count + " faction types.")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -52,7 +62,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetRaceTypes_NoneInDatabase_ReturnsFailure()
         {
             // Arrange
-            var characterMetadataService = CreateCharacterMetadataService(out var context);
+            var characterMetadataService = CreateCharacterMetadataService(out _, out _);
 
             // Act
             var result = await characterMetadataService.GetRaceTypesAsync();
@@ -68,7 +78,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetRaceTypes_ValidRequest_ReturnsSuccess()
         {
             // Arrange
-            var characterMetadataService = CreateCharacterMetadataService(out var context, seedRaceTypes: true);
+            var characterMetadataService = CreateCharacterMetadataService(out _, out var mockLogger, seedRaceTypes: true);
 
             // Act
             var result = await characterMetadataService.GetRaceTypesAsync();
@@ -77,6 +87,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value);
             Assert.IsType<Result<List<RaceType>>>(result);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Successfully retrieved " + result.Value.Count + " race types.")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -88,7 +107,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetClassTypes_NoneInDatabase_ReturnsFailure()
         {
             // Arrange
-            var characterMetadataService = CreateCharacterMetadataService(out var context);
+            var characterMetadataService = CreateCharacterMetadataService(out _, out _);
 
             // Act
             var result = await characterMetadataService.GetClassTypesAsync();
@@ -104,7 +123,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetClassTypes_ValidRequest_ReturnsSuccess()
         {
             // Arrange
-            var characterMetadataService = CreateCharacterMetadataService(out var context, seedClassTypes: true);
+            var characterMetadataService = CreateCharacterMetadataService(out _, out var mockLogger, seedClassTypes: true);
 
             // Act
             var result = await characterMetadataService.GetClassTypesAsync();
@@ -113,6 +132,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value);
             Assert.IsType<Result<List<ClassType>>>(result);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Successfully retrieved " + result.Value.Count + " class types.")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -124,7 +152,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetCharacterMappings_NoneInDatabase_ReturnsFailure()
         {
             // Arrange
-            var characterMetadataService = CreateCharacterMetadataService(out var context);
+            var characterMetadataService = CreateCharacterMetadataService(out _, out _);
 
             // Act
             var result = await characterMetadataService.GetCharacterMappingsAsync();
@@ -140,7 +168,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetCharacterMappings_ValidRequest_ReturnsSuccess()
         {
             // Arrange
-            var characterMetadataService = CreateCharacterMetadataService(out var context, seedCharacterMappings: true);
+            var characterMetadataService = CreateCharacterMetadataService(out _, out var mockLogger, seedCharacterMappings: true);
 
             // Act
             var result = await characterMetadataService.GetCharacterMappingsAsync();
@@ -149,6 +177,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value);
             Assert.IsType<Result<List<CharacterMappings>>>(result);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Successfully retrieved " + result.Value.Count + " character mappings.")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -160,7 +197,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetRealms_NoneInDatabase_ReturnsFailure()
         {
             // Arrange
-            var characterMetadataService = CreateCharacterMetadataService(out var context);
+            var characterMetadataService = CreateCharacterMetadataService(out _, out _);
 
             // Act
             var result = await characterMetadataService.GetRealmsAsync();
@@ -176,7 +213,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task GetRealms_ValidRequest_ReturnsSuccess()
         {
             // Arrange
-            var characterMetadataService = CreateCharacterMetadataService(out var context, seedRealms: true);
+            var characterMetadataService = CreateCharacterMetadataService(out _, out var mockLogger, seedRealms: true);
 
             // Act
             var result = await characterMetadataService.GetRealmsAsync();
@@ -185,6 +222,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value);
             Assert.IsType<Result<List<Realm>>>(result);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Successfully retrieved " + result.Value.Count + " realms.")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -198,6 +244,7 @@ namespace CharacterManagerApiTutorial.Tests
         /// </summary>
         private static CharacterMetadataService CreateCharacterMetadataService(
             out CharacterManagerDbContext context,
+            out Mock<ILogger<CharacterMetadataService>> mockLogger,
             bool seedFactionTypes = false,
             bool seedRaceTypes = false,
             bool seedClassTypes = false,
@@ -207,6 +254,9 @@ namespace CharacterManagerApiTutorial.Tests
         {
             // Create a new in-memory DbContext for isolated testing
             context = GetInMemoryDbContext();
+
+            // Create a mock logger to verify or suppress log output during tests
+            mockLogger = new Mock<ILogger<CharacterMetadataService>>();
 
             // Seeds the provided FantasyGameTutorialDbContext with predefined faction, race, class, character mapping, and realm mappings as needed
             if (seedFactionTypes)
@@ -221,7 +271,7 @@ namespace CharacterManagerApiTutorial.Tests
                 AddRealms(context);
 
             // Return a new instance of the CharacterService using the test context
-            return new CharacterMetadataService(context, NullLogger<CharacterMetadataService>.Instance);
+            return new CharacterMetadataService(context, mockLogger.Object);
         }
 
 

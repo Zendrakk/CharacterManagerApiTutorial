@@ -11,8 +11,6 @@ namespace CharacterManagerApiTutorial.Services
 
         public async Task<Result<List<FactionType>>> GetFactionTypesAsync()
         {
-            _logger.LogInformation("Retrieving faction types from database...");
-
             try
             {
                 // Retrieve all faction types asynchronously from the database
@@ -20,10 +18,7 @@ namespace CharacterManagerApiTutorial.Services
 
                 // Return failure if the list is null or empty
                 if (factionTypes == null || factionTypes.Count == 0)
-                {
-                    _logger.LogWarning("No faction types found.");
                     return Result<List<FactionType>>.Failure("No factions found.");
-                }
 
                 // Return success with the list of faction types
                 _logger.LogInformation("Successfully retrieved {Count} faction types.", factionTypes.Count);
@@ -39,8 +34,6 @@ namespace CharacterManagerApiTutorial.Services
 
         public async Task<Result<List<RaceType>>> GetRaceTypesAsync()
         {
-            _logger.LogInformation("Retrieving race types from database...");
-
             try
             {
                 // Retrieve all race types asynchronously from the database
@@ -48,10 +41,7 @@ namespace CharacterManagerApiTutorial.Services
 
                 // Return failure if the list is null or empty
                 if (raceTypes == null || raceTypes.Count == 0)
-                {
-                    _logger.LogWarning("No race types found.");
                     return Result<List<RaceType>>.Failure("No races found.");
-                }
 
                 // Return success with the list of race types
                 _logger.LogInformation("Successfully retrieved {Count} race types.", raceTypes.Count);
@@ -67,8 +57,6 @@ namespace CharacterManagerApiTutorial.Services
 
         public async Task<Result<List<ClassType>>> GetClassTypesAsync()
         {
-            _logger.LogInformation("Retrieving class types from database...");
-
             try
             {
                 // Retrieve all class types asynchronously from the database
@@ -76,10 +64,7 @@ namespace CharacterManagerApiTutorial.Services
 
                 // Return failure if the list is null or empty
                 if (classTypes == null || classTypes.Count == 0)
-                {
-                    _logger.LogWarning("No class types found.");
                     return Result<List<ClassType>>.Failure("No classes found.");
-                }
 
                 // Return success with the list of class types
                 _logger.LogInformation("Successfully retrieved {Count} class types.", classTypes.Count);
@@ -95,8 +80,6 @@ namespace CharacterManagerApiTutorial.Services
 
         public async Task<Result<List<CharacterMappings>>> GetCharacterMappingsAsync()
         {
-            _logger.LogInformation("Retrieving character mappings from database...");
-
             try
             {
                 // Retrieve all character mappings asynchronously from the database
@@ -104,10 +87,7 @@ namespace CharacterManagerApiTutorial.Services
 
                 // Return failure if the list is null or empty
                 if (characterMappings == null || characterMappings.Count == 0)
-                {
-                    _logger.LogWarning("No character mappings found.");
                     return Result<List<CharacterMappings>>.Failure("No character mappings found.");
-                }
 
                 // Return success with the list of character mappings
                 _logger.LogInformation("Successfully retrieved {Count} character mappings.", characterMappings.Count);
@@ -123,8 +103,6 @@ namespace CharacterManagerApiTutorial.Services
 
         public async Task<Result<List<Realm>>> GetRealmsAsync()
         {
-            _logger.LogInformation("Retrieving realms from database...");
-
             try
             {
                 // Retrieve all realms asynchronously from the database
@@ -132,10 +110,7 @@ namespace CharacterManagerApiTutorial.Services
 
                 // Return failure if the list is null or empty
                 if (realms == null || realms.Count == 0)
-                {
-                    _logger.LogWarning("No realms found.");
                     return Result<List<Realm>>.Failure("No realms found.");
-                }
 
                 // Return success with the list of realms
                 _logger.LogInformation("Successfully retrieved {Count} realms.", realms.Count);

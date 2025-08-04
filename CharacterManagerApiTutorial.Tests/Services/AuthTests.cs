@@ -4,9 +4,11 @@ using CharacterManagerApiTutorial.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
+using Moq;
+using System;
 
-namespace CharacterManagerApiTutorial.Tests
+namespace CharacterManagerApiTutorial.Tests.Services
 {
     public class AuthTests
     {
@@ -18,7 +20,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task RegisterAsync_NullRequest_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out _, out _);
 
             // Act
             var result = await authService.RegisterAsync(null!);  // Marked as cannot be null to suppress the warning in test results.
@@ -33,7 +35,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task RegisterAsync_EmptyUsername_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out _, out _);
             var request = new UserDto { Username = "", Password = "Password1" };
 
             // Act
@@ -49,7 +51,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task RegisterAsync_EmptyPassword_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out _, out _);
             var request = new UserDto { Username = "testuser", Password = "" };
 
             // Act
@@ -65,7 +67,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task RegisterAsync_UsernameLengthExceedsMaxAllowed_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out _, out _);
             var request = new UserDto { Username = "UsernameExceeds20Characters", Password = "Password1" };
 
             // Act
@@ -81,7 +83,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task RegisterAsync_DuplicateUsername_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out var context, out _);
             var request = new UserDto { Username = "TestUser", Password = "Password1" };
 
             // Act
@@ -107,7 +109,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task RegisterAsync_ValidRequest_ReturnsSuccess()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out var context, out var mockLogger);
             var request = new UserDto { Username = "TestUser", Password = "Password1" };
 
             // Act
@@ -126,6 +128,23 @@ namespace CharacterManagerApiTutorial.Tests
             var hasher = new PasswordHasher<User>();
             var verifyResult = hasher.VerifyHashedPassword(user, user.PasswordHash, "Password1");
             Assert.Equal(PasswordVerificationResult.Success, verifyResult);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Registering user: 'testuser'")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Successfully registered user: 'testuser'")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -137,7 +156,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task LoginAsync_NullRequest_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out _, out _);
 
             // Act
             var result = await authService.LoginAsync(null!);
@@ -152,7 +171,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task LoginAsync_EmptyUsername_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out _, out _);
 
             var loginRequest = new UserDto
             {
@@ -173,7 +192,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task LoginAsync_EmptyPassword_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out _, out _);
 
             var loginRequest = new UserDto
             {
@@ -194,7 +213,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task LoginAsync_InvalidPassword_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out var context, out _);
 
             var user = new User { Username = "testuser" };
             user.PasswordHash = new PasswordHasher<User>().HashPassword(user, "Password1");
@@ -220,7 +239,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task LoginAsync_ValidCredentials_ReturnsSuccess()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out var context, out var mockLogger);
 
             var user = new User { Username = "testuser" };
             user.PasswordHash = new PasswordHasher<User>().HashPassword(user, "Password1");
@@ -241,6 +260,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.NotNull(result.Value);
             Assert.False(string.IsNullOrWhiteSpace(result.Value.AccessToken));
             Assert.False(string.IsNullOrWhiteSpace(result.Value.RefreshToken));
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Successfully logged in user: 'testuser'")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -252,7 +280,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task RefreshTokenAsync_NullRequest_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out _, out _);
 
             // Act
             var result = await authService.RefreshTokensAsync(null!);
@@ -267,7 +295,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task RefreshTokenAsync_EmptyUserId_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out _, out _);
             var request = new RefreshTokenRequestDto
             {
                 UserId = Guid.Empty,
@@ -287,7 +315,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task RefreshTokenAsync_EmptyRefreshToken_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out _, out _);
             var request = new RefreshTokenRequestDto
             {
                 UserId = Guid.NewGuid(),
@@ -307,7 +335,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task RefreshTokenAsync_InvalidRefreshToken_ReturnsFailure()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out _, out _);
             var request = new RefreshTokenRequestDto
             {
                 UserId = Guid.NewGuid(),
@@ -327,7 +355,7 @@ namespace CharacterManagerApiTutorial.Tests
         public async Task RefreshTokenAsync_ValidRefreshToken_ReturnsSuccess()
         {
             // Arrange
-            var authService = CreateAuthService(out var context);
+            var authService = CreateAuthService(out var context, out var mockLogger);
 
             var userId = Guid.NewGuid();
             var password = "Password1";
@@ -359,6 +387,15 @@ namespace CharacterManagerApiTutorial.Tests
             Assert.NotNull(result.Value);
             Assert.False(string.IsNullOrWhiteSpace(result.Value.AccessToken));
             Assert.False(string.IsNullOrWhiteSpace(result.Value.RefreshToken));
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Successfully refreshed token for user: '" + userId.ToString() + "'")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
         }
 
 
@@ -371,7 +408,7 @@ namespace CharacterManagerApiTutorial.Tests
         /// Helper method to create a new instance of AuthService for testing purposes.
         /// It initializes a fresh in-memory database context and a mocked configuration, ensuring each test runs in isolation without side effects.
         /// </summary>
-        private static AuthService CreateAuthService(out CharacterManagerDbContext context)
+        private static AuthService CreateAuthService(out CharacterManagerDbContext context, out Mock<ILogger<AuthService>> mockLogger)
         {
             // Create a new in-memory DbContext for isolated testing
             context = GetInMemoryDbContext();
@@ -379,8 +416,11 @@ namespace CharacterManagerApiTutorial.Tests
             // Build an in-memory configuration that includes token settings
             var config = ConfigurationBuilder();
 
+            // Create a mock logger to verify or suppress log output during tests
+            mockLogger = new Mock<ILogger<AuthService>>();
+
             // Return a new instance of the AuthService using the test context and config
-            return new AuthService(context, config, NullLogger<AuthService>.Instance);
+            return new AuthService(context, config, mockLogger.Object);
         }
 
 

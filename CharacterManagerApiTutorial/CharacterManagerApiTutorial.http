@@ -1,6 +1,65 @@
-@CharacterManagerApiTutorial_HostAddress = http://localhost:5089
+@CharacterManagerApiTutorial_HostAddress = https://localhost:7234
+@jwtToken = your-jwt-token-here
 
-GET {{CharacterManagerApiTutorial_HostAddress}}/weatherforecast/
+### Authenticate and get JWT token
+POST {{CharacterManagerApiTutorial_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "string",
+  "password": "string"
+}
+
+###
+
+### Get all characters
+GET {{CharacterManagerApiTutorial_HostAddress}}/api/character
 Accept: application/json
+Authorization: Bearer {{jwtToken}}
+
+###
+
+### GET character by ID
+GET {{CharacterManagerApiTutorial_HostAddress}}/api/character/1
+Accept: application/json
+Authorization: Bearer {{jwtToken}}
+
+###
+
+### POST create new character
+POST {{CharacterManagerApiTutorial_HostAddress}}/api/character
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "name": "Eyegor",
+  "level": 40,
+  "FactionId": 2,
+  "RaceId": 5,
+  "ClassId": 3,
+  "RealmId": 1
+}
+
+###
+
+### PUT update existing character
+PUT {{CharacterManagerApiTutorial_HostAddress}}/api/character/1
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "name": "Eyegor",
+  "level": 1,
+  "FactionId": 2,
+  "RaceId": 5,
+  "ClassId": 3,
+  "RealmId": 1
+}
+
+###
+
+### DELETE character by ID
+DELETE {{CharacterManagerApiTutorial_HostAddress}}/api/character/1
+Authorization: Bearer {{jwtToken}}
 
 ###

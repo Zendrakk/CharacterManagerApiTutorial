@@ -9,6 +9,10 @@ namespace CharacterManagerApiTutorial.Services
         private readonly CharacterManagerDbContext _context = context;
         private readonly ILogger<CharacterService> _logger = logger;
 
+
+        /// <summary>
+        /// Retrieves all characters associated with a specific user ID (userGuid).
+        /// </summary>
         public async Task<Result<List<Character>>> GetCharactersAsync(Guid userGuid)
         {
             // Step 1: Validate userGuid
@@ -25,6 +29,10 @@ namespace CharacterManagerApiTutorial.Services
             return Result<List<Character>>.Success(characters);
         }
 
+
+        /// <summary>
+        /// Retrieves specific character by its ID associated with a specific user ID (userGuid).
+        /// </summary>
         public async Task<Result<Character>> GetCharacterByIdAsync(int id, Guid userGuid)
         {
             // Step 1: Validate userGuid
@@ -44,6 +52,10 @@ namespace CharacterManagerApiTutorial.Services
             return Result<Character>.Success(character);
         }
 
+
+        /// <summary>
+        /// Creates a new character for a specific user (userGuid) after validating input, rules, and constraints.
+        /// </summary>
         public async Task<Result<Character>> CreateCharacterAsync(Character newCharacter, Guid userGuid)
         {
             // Step 1: Check to see if object is null.
@@ -96,6 +108,10 @@ namespace CharacterManagerApiTutorial.Services
             }
         }
 
+
+        /// <summary>
+        /// Updates an existing character for a specific user (userGuid) after validating input, rules, and constraints.
+        /// </summary>
         public async Task<Result> UpdateCharacterAsync(int id, Character updatedCharacter, Guid userGuid)
         {
             // Step 1: Check to see if object is null.
@@ -166,6 +182,10 @@ namespace CharacterManagerApiTutorial.Services
             }
         }
 
+
+        /// <summary>
+        /// Deletes a character by ID for a specific user (userGuid), ensuring the character belongs to that user.
+        /// </summary>
         public async Task<Result<int>> DeleteCharacterAsync(int id, Guid userGuid)
         {
             // Step 1: Validate userGuid.
@@ -195,6 +215,9 @@ namespace CharacterManagerApiTutorial.Services
         }
 
 
+        /// <summary>
+        /// Validates whether the specified character has a valid realm assignment.
+        /// </summary>
         private async Task<bool> ValidateRealm(Character character)
         {
             // Return false if the character is null, or Realm Id is non-positive
@@ -208,6 +231,9 @@ namespace CharacterManagerApiTutorial.Services
         }
 
 
+        /// <summary>
+        /// Checks whether the given character's name and realm combination is unique.
+        /// </summary>
         private async Task<bool> CheckForDuplicateName(Character character)
         {
             // Return false if the input character is null
@@ -232,6 +258,10 @@ namespace CharacterManagerApiTutorial.Services
             return true;
         }
 
+
+        /// <summary>
+        /// Validates that the given character's faction, race, and class combination is allowed based on predefined mappings in the database.
+        /// </summary>
         private async Task<bool> ValidateFactionRaceClass(Character newCharacter)
         {
             List<CharacterMappings> raceList = [];

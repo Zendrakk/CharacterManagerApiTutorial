@@ -38,7 +38,7 @@ namespace CharacterManagerApiTutorial.Controllers
 
             if (!result.IsSuccess)
             {
-                _logger.LogWarning("Service failed to log in user: {Error}", result.Error);
+                _logger.LogWarning("Service failed to login user with error: {Error}", result.Error);
                 return BadRequest(result.Error);
             }
 
@@ -49,13 +49,13 @@ namespace CharacterManagerApiTutorial.Controllers
         [HttpPost("refresh-token")]
         public async Task<ActionResult<TokenResponseDto>> RefreshTokenAsync(RefreshTokenRequestDto request)
         {
-            _logger.LogInformation("Refresh token attempt for user: {UserId}", request.UserId);
+            _logger.LogInformation("Refresh token attempt for user ID: {UserId}", request.UserId);
 
             var result = await _authService.RefreshTokensAsync(request);
 
             if (!result.IsSuccess)
             {
-                _logger.LogWarning("Service failed to refresh token for user {userid}: {Error}", request.UserId, result.Error);
+                _logger.LogWarning("Service failed to refresh token for user ID {userid}, Error: {Error}", request.UserId, result.Error);
                 return Unauthorized(result.Error);
             }
 

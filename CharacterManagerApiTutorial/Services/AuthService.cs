@@ -17,6 +17,9 @@ namespace CharacterManagerApiTutorial.Services
         private readonly ILogger<AuthService> _logger = logger;
 
 
+        /// <summary>
+        /// Registers a new user account by validating input, checking for duplicates, hashing the password, and saving the user to the database.
+        /// </summary>
         public async Task<Result<User>> RegisterAsync(UserDto request)
         {
             // Step 1: Check to see if object is null.
@@ -70,6 +73,9 @@ namespace CharacterManagerApiTutorial.Services
         }
 
 
+        /// <summary>
+        /// Authenticates a user based on the provided credentials and returns a token response if successful.
+        /// </summary>
         public async Task<Result<TokenResponseDto>> LoginAsync(UserDto request)
         {
             // Step 1: Check to see if object is null.
@@ -211,8 +217,7 @@ namespace CharacterManagerApiTutorial.Services
 
         /// <summary>
         /// Creates a signed JSON Web Token for the specified user.
-        /// The token includes the user's ID, username, and role as claims,
-        /// and is signed using a symmetric key from configuration.
+        /// The token includes the user's ID, username, and role as claims, and is signed using a symmetric key from configuration.
         /// It is valid for 1 day and includes issuer and audience information.
         /// </summary>
         private string CreateToken(User user)

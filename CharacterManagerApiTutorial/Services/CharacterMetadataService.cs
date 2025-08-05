@@ -9,6 +9,10 @@ namespace CharacterManagerApiTutorial.Services
         private readonly CharacterManagerDbContext _context = context;
         private readonly ILogger<CharacterMetadataService> _logger = logger;
 
+
+        /// <summary>
+        /// Asynchronously retrieves all faction types from the database.
+        /// </summary>
         public async Task<Result<List<FactionType>>> GetFactionTypesAsync()
         {
             try
@@ -32,6 +36,10 @@ namespace CharacterManagerApiTutorial.Services
             }
         }
 
+
+        /// <summary>
+        /// Asynchronously retrieves all race types from the database.
+        /// </summary>
         public async Task<Result<List<RaceType>>> GetRaceTypesAsync()
         {
             try
@@ -55,6 +63,10 @@ namespace CharacterManagerApiTutorial.Services
             }
         }
 
+
+        /// <summary>
+        /// Asynchronously retrieves all class types from the database.
+        /// </summary>
         public async Task<Result<List<ClassType>>> GetClassTypesAsync()
         {
             try
@@ -78,6 +90,10 @@ namespace CharacterManagerApiTutorial.Services
             }
         }
 
+
+        /// <summary>
+        /// Asynchronously retrieves all character mappings from the database.
+        /// </summary>
         public async Task<Result<List<CharacterMappings>>> GetCharacterMappingsAsync()
         {
             try
@@ -101,6 +117,10 @@ namespace CharacterManagerApiTutorial.Services
             }
         }
 
+
+        /// <summary>
+        /// Asynchronously retrieves all realms from the database.
+        /// </summary>
         public async Task<Result<List<Realm>>> GetRealmsAsync()
         {
             try

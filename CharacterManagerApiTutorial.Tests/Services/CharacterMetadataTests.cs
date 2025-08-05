@@ -29,6 +29,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("No factions found.", result.Error);
         }
 
+
         [Fact]
         public async Task GetFactionTypes_ValidRequest_ReturnsSuccess()
         {
@@ -73,6 +74,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.NotNull(result.Error);
             Assert.Equal("No races found.", result.Error);
         }
+
 
         [Fact]
         public async Task GetRaceTypes_ValidRequest_ReturnsSuccess()
@@ -119,6 +121,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("No classes found.", result.Error);
         }
 
+
         [Fact]
         public async Task GetClassTypes_ValidRequest_ReturnsSuccess()
         {
@@ -164,6 +167,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("No character mappings found.", result.Error);
         }
 
+
         [Fact]
         public async Task GetCharacterMappings_ValidRequest_ReturnsSuccess()
         {
@@ -208,6 +212,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.NotNull(result.Error);
             Assert.Equal("No realms found.", result.Error);
         }
+
 
         [Fact]
         public async Task GetRealms_ValidRequest_ReturnsSuccess()

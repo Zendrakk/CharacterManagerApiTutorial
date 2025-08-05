@@ -31,6 +31,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Request is null.", result.Error);
         }
 
+
         [Fact]
         public async Task RegisterAsync_EmptyUsername_ReturnsFailure()
         {
@@ -46,6 +47,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Null(result.Value);
             Assert.Equal("Username and password are required.", result.Error);
         }
+
 
         [Fact]
         public async Task RegisterAsync_EmptyPassword_ReturnsFailure()
@@ -63,6 +65,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Username and password are required.", result.Error);
         }
 
+
         [Fact]
         public async Task RegisterAsync_UsernameLengthExceedsMaxAllowed_ReturnsFailure()
         {
@@ -78,6 +81,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Null(result.Value);
             Assert.Equal("Username must not exceed 20 characters.", result.Error);
         }
+
 
         [Fact]
         public async Task RegisterAsync_DuplicateUsername_ReturnsFailure()
@@ -104,6 +108,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Null(result2.Value);
             Assert.Equal("Username already exists.", result2.Error);
         }
+
 
         [Fact]
         public async Task RegisterAsync_ValidRequest_ReturnsSuccess()
@@ -167,6 +172,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Request is null.", result.Error);
         }
 
+
         [Fact]
         public async Task LoginAsync_EmptyUsername_ReturnsFailure()
         {
@@ -188,6 +194,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Username and password are required.", result.Error);
         }
 
+
         [Fact]
         public async Task LoginAsync_EmptyPassword_ReturnsFailure()
         {
@@ -208,6 +215,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Null(result.Value);
             Assert.Equal("Username and password are required.", result.Error);
         }
+
 
         [Fact]
         public async Task LoginAsync_InvalidPassword_ReturnsFailure()
@@ -234,6 +242,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Null(result.Value);
             Assert.Equal("Invalid username or password.", result.Error);
         }
+
 
         [Fact]
         public async Task LoginAsync_ValidCredentials_ReturnsSuccess()
@@ -291,6 +300,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Invalid request.", result.Error);
         }
 
+
         [Fact]
         public async Task RefreshTokenAsync_EmptyUserId_ReturnsFailure()
         {
@@ -310,6 +320,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Null(result.Value);
             Assert.Equal("Invalid request.", result.Error);
         }
+
 
         [Fact]
         public async Task RefreshTokenAsync_EmptyRefreshToken_ReturnsFailure()
@@ -331,6 +342,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Invalid request.", result.Error);
         }
 
+
         [Fact]
         public async Task RefreshTokenAsync_InvalidRefreshToken_ReturnsFailure()
         {
@@ -350,6 +362,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Null(result.Value);
             Assert.Equal("Refresh token is invalid or expired.", result.Error);
         }
+
 
         [Fact]
         public async Task RefreshTokenAsync_ValidRefreshToken_ReturnsSuccess()

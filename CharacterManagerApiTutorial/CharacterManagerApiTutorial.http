@@ -1,13 +1,25 @@
 @CharacterManagerApiTutorial_HostAddress = https://localhost:7234
+@CharacterID = 1
 @jwtToken = your-jwt-token-here
 
-### Authenticate and get JWT token
+### Register a username/password
+POST {{CharacterManagerApiTutorial_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "Password1"
+}
+
+###
+
+### Authenticate and get JWT token (COPY/PASTE UP ABOVE UNDER @jwtToken)
 POST {{CharacterManagerApiTutorial_HostAddress}}/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "string",
-  "password": "string"
+  "username": "testuser",
+  "password": "Password1"
 }
 
 ###
@@ -20,7 +32,7 @@ Authorization: Bearer {{jwtToken}}
 ###
 
 ### GET character by ID
-GET {{CharacterManagerApiTutorial_HostAddress}}/api/character/1
+GET {{CharacterManagerApiTutorial_HostAddress}}/api/character/{{CharacterID}}
 Accept: application/json
 Authorization: Bearer {{jwtToken}}
 
@@ -43,7 +55,7 @@ Authorization: Bearer {{jwtToken}}
 ###
 
 ### PUT update existing character
-PUT {{CharacterManagerApiTutorial_HostAddress}}/api/character/1
+PUT {{CharacterManagerApiTutorial_HostAddress}}/api/character/{{CharacterID}}
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
@@ -59,7 +71,7 @@ Authorization: Bearer {{jwtToken}}
 ###
 
 ### DELETE character by ID
-DELETE {{CharacterManagerApiTutorial_HostAddress}}/api/character/1
+DELETE {{CharacterManagerApiTutorial_HostAddress}}/api/character/{{CharacterID}}
 Authorization: Bearer {{jwtToken}}
 
 ###

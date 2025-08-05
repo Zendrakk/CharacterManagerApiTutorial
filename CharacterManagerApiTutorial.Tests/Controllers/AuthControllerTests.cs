@@ -48,6 +48,7 @@ namespace CharacterManagerApiTutorial.Tests.Controllers
                 Times.Once);
         }
 
+
         [Fact]
         public async Task Register_ReturnsOk_WhenSuccessful()
         {
@@ -130,11 +131,12 @@ namespace CharacterManagerApiTutorial.Tests.Controllers
                 x => x.Log(
                     LogLevel.Warning,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Service failed to log in user: " + errorMessage + "")),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Service failed to login user with error: " + errorMessage + "")),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);
         }
+
 
         [Fact]
         public async Task Login_ReturnsOk_WhenSuccessful()
@@ -215,11 +217,12 @@ namespace CharacterManagerApiTutorial.Tests.Controllers
                 x => x.Log(
                     LogLevel.Warning,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Service failed to refresh token for user " + requestDto.UserId + ": " + errorMessage + "")),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Service failed to refresh token for user ID " + requestDto.UserId + ", Error: " + errorMessage + "")),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);
         }
+
 
         [Fact]
         public async Task RefreshTokenAsync_ReturnsOk_WhenRefreshIsSuccessful()
@@ -260,7 +263,7 @@ namespace CharacterManagerApiTutorial.Tests.Controllers
                 x => x.Log(
                     LogLevel.Information,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Contains($"Refresh token attempt for user: " + requestDto.UserId + "")),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Contains($"Refresh token attempt for user ID: " + requestDto.UserId + "")),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);

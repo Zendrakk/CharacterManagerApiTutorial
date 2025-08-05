@@ -36,6 +36,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
 
         }
 
+
         [Fact]
         public async Task GetCharacters_ValidRequest_ReturnsSuccess()
         {
@@ -68,6 +69,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);
         }
+
 
         [Fact]
         public async Task GetCharacters_ValidEmptyList_ReturnsSuccess()
@@ -119,6 +121,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Character not found or access denied.", result.Error);
         }
 
+
         [Fact]
         public async Task GetCharacterById_InvalidUserGuid_ReturnsFailure()
         {
@@ -137,6 +140,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Null(result.Value);
             Assert.Equal("Invalid user ID.", result.Error);
         }
+
 
         [Fact]
         public async Task GetCharacterById_ValidRequest_ReturnsSuccess()
@@ -190,6 +194,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Character is null.", result.Error);
         }
 
+
         [Fact]
         public async Task CreateCharacter_InvalidFactionToRace_ReturnsFailure()
         {
@@ -206,6 +211,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Null(result.Value);
             Assert.Equal("Invalid faction-race-class combination.", result.Error);
         }
+
 
         [Fact]
         public async Task CreateCharacter_InvalidRaceToClass_ReturnsFailure()
@@ -224,6 +230,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Invalid faction-race-class combination.", result.Error);
         }
 
+
         [Fact]
         public async Task CreateCharacter_InvalidNameLength_ReturnsFailure()
         {
@@ -241,6 +248,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Name is invalid or exceeds 15 characters.", result.Error);
         }
 
+
         [Fact]
         public async Task CreateCharacter_InvalidLevel_ReturnsFailure()
         {
@@ -257,6 +265,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Null(result.Value);
             Assert.Equal("Level must be between 1 and 50.", result.Error);
         }
+
 
         [Fact]
         public async Task CreateCharacter_DuplicateName_ReturnsFailure()
@@ -279,6 +288,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Character with the same name already exists.", result2.Error);
         }
 
+
         [Fact]
         public async Task CreateCharacter_InvalidUserGuid_ReturnsFailure()
         {
@@ -294,6 +304,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Null(result.Value);
             Assert.Equal("Invalid user ID.", result.Error);
         }
+
 
         [Fact]
         public async Task CreateCharacter_ValidRequest_ReturnsSuccess()
@@ -348,6 +359,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
 
         }
 
+
         [Fact]
         public async Task UpdateCharacter_UserGuidDoesNotMatch_ReturnsFailure()
         {
@@ -366,6 +378,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Character not found or access denied.", result.Error);
 
         }
+
 
         [Fact]
         public async Task UpdateCharacter_InvalidRealmId_ReturnsFailure()
@@ -387,6 +400,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.False(result.IsSuccess);
             Assert.Equal("Invalid realm ID.", result.Error);
         }
+
 
         [Fact]
         public async Task UpdateCharacter_ModifyCharacterValues_ReturnsSuccess()
@@ -452,6 +466,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Character not found or access denied.", result.Error);
         }
 
+
         [Fact]
         public async Task DeleteCharacter_InvalidUserGuid_ReturnsFailure()
         {
@@ -471,6 +486,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.Equal("Invalid user ID.", result.Error);
         }
 
+
         [Fact]
         public async Task DeleteCharacter_IncorrectUserGuid_ReturnsFailure()
         {
@@ -489,6 +505,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.False(result.IsSuccess);
             Assert.Equal("Character not found or access denied.", result.Error);
         }
+
 
         [Fact]
         public async Task DeleteCharacter_ValidRequest_ReturnsSuccess()

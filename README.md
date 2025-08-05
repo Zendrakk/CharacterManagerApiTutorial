@@ -100,15 +100,15 @@ This helps maintain narrative and gameplay consistency in any game built on top 
 
 ### Level Restrictions
 
-- Character **Level** must be between `1` and `50`.
+- Character **Level** range must be between `1` and `50`. Restriction at model level and service level.
 
 ### Name Length Restrictions
 
-- Character **Name** max length must not exceed `15` characters.
+- Character **Name** length must be between `3` and `15` characters. Restriction at model level and service level.
 
 ### Username Length Restrictions
 
-- **Username** must not exceed `20` characters.
+- **Username** length must be between `3` and `20` characters. Restriction at model level and service level.
 
 ## 🛠 How to Run
 

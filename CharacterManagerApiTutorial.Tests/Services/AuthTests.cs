@@ -67,7 +67,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
 
 
         [Fact]
-        public async Task RegisterAsync_UsernameLengthExceedsMaxAllowed_ReturnsFailure()
+        public async Task RegisterAsync_InvalidUsernameLengthMax_ReturnsFailure()
         {
             // Arrange
             var authService = CreateAuthService(out _, out _);
@@ -79,7 +79,23 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Assert
             Assert.False(result.IsSuccess);
             Assert.Null(result.Value);
-            Assert.Equal("Username must not exceed 20 characters.", result.Error);
+            Assert.Equal("Username must be between 3 and 20 characters.", result.Error);
+        }
+
+        [Fact]
+        public async Task RegisterAsync_InvalidUsernameLengthMin_ReturnsFailure()
+        {
+            // Arrange
+            var authService = CreateAuthService(out _, out _);
+            var request = new UserDto { Username = "Us", Password = "Password1" };
+
+            // Act
+            var result = await authService.RegisterAsync(request);
+
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Null(result.Value);
+            Assert.Equal("Username must be between 3 and 20 characters.", result.Error);
         }
 
 

@@ -70,9 +70,9 @@ namespace CharacterManagerApiTutorial.Services
                 return Result<Character>.Failure("Invalid user ID.");
             newCharacter.UserId = userGuid;
 
-            // Step 4: Validate name length (Max characters = 15).
-            if (string.IsNullOrWhiteSpace(newCharacter.Name) || newCharacter.Name.Length > 15)
-                return Result<Character>.Failure("Name is invalid or exceeds 15 characters.");
+            // Step 4: Validate name length (Min = 3 characters, Max = 15 characters).
+            if (string.IsNullOrWhiteSpace(newCharacter.Name) || newCharacter.Name.Length < 3 || newCharacter.Name.Length > 15)
+                return Result<Character>.Failure("Name must be between 3 and 15 characters.");
 
             // Step 5: Validate level range.
             if (newCharacter.Level < 1 || newCharacter.Level > 50)

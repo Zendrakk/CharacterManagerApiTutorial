@@ -232,7 +232,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
 
 
         [Fact]
-        public async Task CreateCharacter_InvalidNameLength_ReturnsFailure()
+        public async Task CreateCharacter_InvalidNameLengthMax_ReturnsFailure()
         {
             // Arrange
             var characterService = CreateCharacterService(out _, out _);
@@ -245,17 +245,51 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Assert
             Assert.False(result.IsSuccess);
             Assert.Null(result.Value);
-            Assert.Equal("Name is invalid or exceeds 15 characters.", result.Error);
+            Assert.Equal("Name must be between 3 and 15 characters.", result.Error);
+        }
+
+        [Fact]
+        public async Task CreateCharacter_InvalidNameLengthMin_ReturnsFailure()
+        {
+            // Arrange
+            var characterService = CreateCharacterService(out _, out _);
+            var userGuid = Guid.NewGuid();
+            var newCharacter = new Character { Id = 1, Name = "Te", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
+
+            // Act
+            var result = await characterService.CreateCharacterAsync(newCharacter, userGuid);
+
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Null(result.Value);
+            Assert.Equal("Name must be between 3 and 15 characters.", result.Error);
         }
 
 
         [Fact]
-        public async Task CreateCharacter_InvalidLevel_ReturnsFailure()
+        public async Task CreateCharacter_InvalidLevelMin_ReturnsFailure()
         {
             // Arrange
             var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
             var newCharacter = new Character { Id = 1, Name = "Tester", Level = 0, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
+
+            // Act
+            var result = await characterService.CreateCharacterAsync(newCharacter, userGuid);
+
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Null(result.Value);
+            Assert.Equal("Level must be between 1 and 50.", result.Error);
+        }
+
+        [Fact]
+        public async Task CreateCharacter_InvalidLevelMax_ReturnsFailure()
+        {
+            // Arrange
+            var characterService = CreateCharacterService(out _, out _);
+            var userGuid = Guid.NewGuid();
+            var newCharacter = new Character { Id = 1, Name = "Tester", Level = 51, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
             // Act
             var result = await characterService.CreateCharacterAsync(newCharacter, userGuid);

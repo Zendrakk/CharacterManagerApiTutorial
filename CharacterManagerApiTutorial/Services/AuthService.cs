@@ -33,10 +33,10 @@ namespace CharacterManagerApiTutorial.Services
             if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
                 return Result<User>.Failure("Username and password are required.");
 
-            // Step 4: Verify username length does not exceed maximum allowed length (20).
-            if (request.Username.Length > 20)
+            // Step 4: Validate username length (Min = 3 characters, Max = 20 characters).
+            if (request.Username.Length < 3 || request.Username.Length > 20)
             {
-                return Result<User>.Failure("Username must not exceed 20 characters.");
+                return Result<User>.Failure("Username must be between 3 and 20 characters.");
             }
 
             // Step 5: Check if a user with the same username already exists in the database

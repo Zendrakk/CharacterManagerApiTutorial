@@ -33,7 +33,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
         public async Task GetFactionTypes_ValidRequest_ReturnsSuccess()
         {
             // Arrange
-            var characterMetadataService = CreateCharacterMetadataService(out var context, out var mockLogger, seedFactionTypes: true);
+            var characterMetadataService = CreateCharacterMetadataService(out _, out var mockLogger, seedFactionTypes: true);
 
             // Act
             var result = await characterMetadataService.GetFactionTypesAsync();

@@ -22,7 +22,7 @@ namespace CharacterManagerApiTutorial.Controllers
 
             if (!result.IsSuccess)
             {
-                _logger.LogWarning("Service failed to register user for user: {Error}", result.Error);
+                _logger.LogWarning("Service failed to register user with error: {Error}", result.Error);
                 return BadRequest(result.Error);
             }
 

@@ -348,7 +348,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Assert
             Assert.False(result.IsSuccess);
             Assert.Null(result.Value);
-            Assert.Equal("Invalid refresh token.", result.Error);
+            Assert.Equal("Refresh token is invalid or expired.", result.Error);
         }
 
         [Fact]

@@ -117,7 +117,7 @@ namespace CharacterManagerApiTutorial.Services
 
             // Step 3: If validation fails, return a failure result
             if (user is null)
-                return Result<TokenResponseDto>.Failure("Invalid refresh token.");
+                return Result<TokenResponseDto>.Failure("Refresh token is invalid or expired.");
 
             // Step 4: Generate new access token and refresh token for the user
             var tokenResponse = await CreateTokenResponse(user);

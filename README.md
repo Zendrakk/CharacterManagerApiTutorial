@@ -1,6 +1,6 @@
 # CharacterManagerApiTutorial
 
-A .NET 9 Web API project for managing characters in a fantasy game. It supports secure user registration, login, token refresh, and management of character data like races, classes, and factions — all powered by Entity Framework Core and SQL Server.
+A backend tutorial project for managing characters in a fantasy-themed game using **ASP.NET Core 9** and **Entity Framework Core**. This project demonstrates best practices for building APIs with clean architecture, validation logic, and data access patterns. It supports secure user registration, login, token refresh, and management of character data like races, classes, and factions.
 
 ## 🚀 Features
 
@@ -12,6 +12,11 @@ A .NET 9 Web API project for managing characters in a fantasy game. It supports 
 - Clean service architecture
 - Unit tested controllers and services
 - Swagger UI
+
+## ✅ Prerequisites
+
+- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download)
+- Visual Studio or VS Code
 
 ## 🧱 Project Structure
 
@@ -96,7 +101,7 @@ All endpoints are prefixed with `/api`.
 | GET    | `/character-metadata/realms`    | Get realms          |
 | GET    | `/character-metadata/charactermappings`    | Get character mappings          |
 
-## Character Restrictions
+## 🚫 Character Restrictions
 
 The API enforces the following rules when creating or updating characters:
 
@@ -160,15 +165,40 @@ This helps maintain narrative and gameplay consistency in any game built on top 
 
 ## 🧪 Test Coverage
 
-- AuthController: `AuthControllerTests.cs`
+- Controllers: `AuthControllerTests.cs` (TODO: tests for the other controllers)
 - Services:
   - `AuthTests.cs`
   - `CharacterTests.cs`
   - `CharacterMetadataTests.cs`
 
+## 📬 Testing the API with `CharacterManagerApiTutorial.http`
+
+This project includes a [**CharacterManagerApiTutorial.http**](./CharacterManagerApiTutorial.http) file that lets you test the API directly within supported IDEs like **Visual Studio** or **VS Code** (with the [REST Client extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)).
+
+### 🛠 How to Use
+
+1. Open `CharacterManagerApiTutorial.http` in your IDE.
+2. Update the placeholder:
+   - Replace `@jwtToken = your-jwt-token-here` with your real token after login.
+3. Click "Send Request" above each request to execute it.
+
+### 📄 Available Requests
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/auth/register` | `POST` | Register a new user |
+| `/api/auth/login` | `POST` | Authenticate and receive JWT |
+| `/api/character` | `GET` | Retrieve all characters (requires token) |
+| `/api/character/{id}` | `GET` | Retrieve character by ID |
+| `/api/character` | `POST` | Create a new character |
+| `/api/character/{id}` | `PUT` | Update an existing character |
+| `/api/character/{id}` | `DELETE` | Delete a character |
+
+All secured endpoints require the `Authorization: Bearer {{jwtToken}}` header.
+
 ## 📝 License
 
-MIT — free for educational or commercial use.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
 
 ## 👤 Author
 

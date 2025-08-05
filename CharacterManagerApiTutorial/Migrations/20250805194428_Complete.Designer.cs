@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CharacterManagerApiTutorial.Migrations
 {
     [DbContext(typeof(CharacterManagerDbContext))]
-    [Migration("20250804032607_Initial")]
-    partial class Initial
+    [Migration("20250805194428_Complete")]
+    partial class Complete
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,7 +50,8 @@ namespace CharacterManagerApiTutorial.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
@@ -76,7 +77,8 @@ namespace CharacterManagerApiTutorial.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<int>("RaceId")
                         .HasColumnType("int");

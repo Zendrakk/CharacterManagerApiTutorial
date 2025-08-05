@@ -1,6 +1,6 @@
 # CharacterManagerApiTutorial
 
-A .NET 9 Web API project for managing characters in a fantasy game. It supports secure user registration, login, token refresh, and management of character data like races, classes, and factions.
+A .NET 9 Web API project for managing characters in a fantasy game. It supports secure user registration, login, token refresh, and management of character data like races, classes, and factions — all powered by Entity Framework Core and SQL Server.
 
 ## 🚀 Features
 
@@ -11,6 +11,7 @@ A .NET 9 Web API project for managing characters in a fantasy game. It supports 
 - Metadata for races, classes, factions, realms
 - Clean service architecture
 - Unit tested controllers and services
+- Swagger UI
 
 ## 🧱 Project Structure
 
@@ -50,6 +51,19 @@ CharacterManagerApiTutorial/
 │       ├── CharacterTests.cs
 │       └── CharacterMetadataTests.cs
 ```
+
+## 🔍 API Documentation with Swagger UI
+
+This project uses **Swagger (OpenAPI)** to provide built-in, interactive API documentation.
+
+### ✅ Swagger Features
+- Fully interactive documentation for all API endpoints
+- Auto-generated OpenAPI spec
+- **JWT Bearer token authentication** support
+- Runs automatically in **Development** environment
+- Accessible from the root of the app (`/`)
+
+---
 
 ## 🔐 API Endpoints
 
@@ -100,34 +114,43 @@ This helps maintain narrative and gameplay consistency in any game built on top 
 
 ### Level Restrictions
 
-- Character **Level** range must be between `1` and `50`. Restriction at model level and service level.
+- Character **Level** range must be between `1` and `50`. Restriction at model level and service level for demonstration purposes.
 
 ### Name Length Restrictions
 
-- Character **Name** length must be between `3` and `15` characters. Restriction at model level and service level.
+- Character **Name** length must be between `3` and `15` characters. Restriction at model level and service level for demonstration purposes.
 
 ### Username Length Restrictions
 
-- **Username** length must be between `3` and `20` characters. Restriction at model level and service level.
+- **Username** length must be between `3` and `20` characters. Restriction at model level and service level for demonstration purposes.
 
 ## 🛠 How to Run
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/your-username/CharacterManagerApiTutorial.git
+   git clone https://github.com/Zendrakk/CharacterManagerApiTutorial.git
    cd CharacterManagerApiTutorial
    ```
 
-2. Update `appsettings.json` with your SQL Server connection string
+2. Update `appsettings.json` with your SQL Server connection string (or SQL Express)
 
 3. Run database migrations
    ```bash
-   dotnet ef database update
+   dotnet ef database update --project CharacterManagerApiTutorial
    ```
 
 4. Run the app
    ```bash
-   dotnet run --project CharacterManagerApiTutorial
+   dotnet run --project CharacterManagerApiTutorial --launch-profile https
+   ```
+   To access the `Swagger UI`, open your browser and navigate to either of the urls displayed in your CMD/Bash:
+   ```bash
+   info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: https://localhost:7234
+   info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5089
+   info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
    ```
 
 5. Run tests

@@ -1,6 +1,10 @@
 # CharacterManagerApiTutorial
 
-A backend tutorial project for managing characters in a fantasy-themed game using **ASP.NET Core 9** and **Entity Framework Core**. This project demonstrates best practices for building APIs with clean architecture, validation logic, and data access patterns. It supports secure user registration, login, token refresh, and management of character data like races, classes, and factions.
+A backend tutorial project for managing characters in a fantasy-themed game using **ASP.NET Core 9** and **Entity Framework Core**. This project demonstrates best practices for building modern APIs, including clean architecture, validation logic, and efficient data access patterns.
+
+It supports secure user registration, login, token refresh, and full CRUD operations for character-related data such as races, classes, factions, and realms.
+
+Since this project was built for educational purposes, it includes **extensive inline comments** throughout the code to explain key concepts, logic, and design decisions.
 
 ## 🚀 Features
 
@@ -12,6 +16,15 @@ A backend tutorial project for managing characters in a fantasy-themed game usin
 - Clean service architecture
 - Unit tested controllers and services
 - Swagger UI
+
+## 🧰 Tech Stack
+
+- ASP.NET Core 9
+- Entity Framework Core
+- xUnit
+- Swagger / OpenAPI
+- SQL Server
+- JWT Authentication
 
 ## ✅ Prerequisites
 

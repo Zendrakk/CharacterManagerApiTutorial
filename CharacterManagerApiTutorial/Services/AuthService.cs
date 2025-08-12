@@ -218,7 +218,7 @@ namespace CharacterManagerApiTutorial.Services
         /// <summary>
         /// Creates a signed JSON Web Token for the specified user.
         /// The token includes the user's ID, username, and role as claims, and is signed using a symmetric key from configuration.
-        /// It is valid for 1 day and includes issuer and audience information.
+        /// It is valid for 10 minutes and includes issuer and audience information.
         /// </summary>
         private string CreateToken(User user)
         {
@@ -242,7 +242,7 @@ namespace CharacterManagerApiTutorial.Services
                 issuer: configuration.GetValue<string>("AppSettings:Issuer"),
                 audience: configuration.GetValue<string>("AppSettings:Audience"),
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(1),
+                expires: DateTime.UtcNow.AddMinutes(10),
                 signingCredentials: creds
             );
 

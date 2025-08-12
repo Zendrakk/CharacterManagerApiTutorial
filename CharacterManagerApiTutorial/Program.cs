@@ -9,7 +9,17 @@ using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add CORS services for frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .WithOrigins("http://localhost:4200") // Angular dev server URL
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials() // If you use cookies or auth headers
+    );
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -97,6 +107,9 @@ builder.Services.AddRateLimiter(options =>
 });
 
 var app = builder.Build();
+
+// Use CORS policy before routing and endpoints
+app.UseCors("AllowFrontend");
 
 app.UseRateLimiter();
 

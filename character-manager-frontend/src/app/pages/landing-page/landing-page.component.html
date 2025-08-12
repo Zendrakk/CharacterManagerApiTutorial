@@ -1,0 +1,17 @@
+<div class="landing-container">
+    <h1>Character List</h1>
+    @if (loading) {
+        <div>Loading characters...</div>
+    }
+    @if (!loading && characters.length > 0) {
+        <ul>
+            @for (char of characters; track $index) {
+            <li><strong>{{ char.name }}</strong> — Realm: {{ char.realmId }} (Level: {{ char.level }})</li>
+            }
+        </ul>
+    }
+  
+    @if (!loading && characters.length === 0) {
+        <div>No characters found.</div>
+    }  
+</div>

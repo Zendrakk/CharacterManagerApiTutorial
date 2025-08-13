@@ -1,17 +1,37 @@
-<div class="landing-container">
-    <h1>Character List</h1>
+<h2>Characters</h2>
+
+<table class="styled-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Level</th>
+      <th>Realm</th>
+      <th>Race</th>
+      <th>Class</th>
+      <th>Faction</th>
+    </tr>
+  </thead>
+  <tbody>
     @if (loading) {
-        <div>Loading characters...</div>
+      <tr>Loading characters...</tr>
     }
     @if (!loading && characters.length > 0) {
-        <ul>
-            @for (char of characters; track $index) {
-            <li><strong>{{ char.name }}</strong> — Realm: {{ char.realmId }} (Level: {{ char.level }})</li>
-            }
-        </ul>
+      @for (char of characters; track $index) {
+        <tr>
+          <td><strong>{{ char.name | titlecase }}</strong></td>
+          <td>{{ char.level }}</td>
+          <td>{{ char.realmId }}</td>
+          <td>{{ char.raceId }}</td>
+          <td>{{ char.classId }}</td>
+          <td>{{ char.factionId }}</td>
+        </tr>
+      }
     }
-  
     @if (!loading && characters.length === 0) {
-        <div>No characters found.</div>
-    }  
+      <tr>No characters found.</tr>
+    }
+  </tbody>
+</table>
+<div class="logout-button">
+  <app-logout-button></app-logout-button>
 </div>

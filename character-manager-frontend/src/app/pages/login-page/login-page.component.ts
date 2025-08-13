@@ -29,14 +29,23 @@ export class LoginPageComponent implements OnInit {
     }
   }
 
-  login() {
+  onSubmit() {
+    this.error = ""
     this.authService.login(this.userDto).subscribe({
       next: () => {
-        console.log(this.authService.getCurrentUserId())
         this.router.navigate(['/landing']);
       },
-      error: () => {
-        this.error = 'Invalid username or password';
+      error: (er) => {
+        if (er.error && er?.error?.errors?.Username[0]) {
+          this.error = er?.error?.errors.Username[0];
+        } else if (er.error && er?.error?.type == 'error') {
+          this.error = 'A server error occurred.';
+        } else if (er.error) {
+          this.error = er.error
+        } else {
+          this.error = 'An unknown error occurred.';
+        }
+        
       }
     });
   }

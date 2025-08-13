@@ -2,11 +2,12 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CharacterService } from '../../services/character.service';
 import { Character } from '../../models/character';
+import { LogoutButtonComponent } from "../../logout-button/logout-button.component";
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LogoutButtonComponent],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.css'
 })

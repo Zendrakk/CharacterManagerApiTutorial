@@ -1,0 +1,44 @@
+h2 {
+  text-align: center;  /* Centers the text horizontally within its container */
+  font-family: 'MedievalSharp', cursive;  /* Applies the MedievalSharp font, with cursive as a fallback */
+}
+.styled-table {
+  border: 2px solid black;  /* Adds a solid black border around the table */
+  border-collapse: collapse;  /* Removes space between table borders */
+  margin-left: auto;  /* Centers table horizontally (left margin auto) */
+  margin-right: auto;  /* Centers table horizontally (right margin auto) */
+  padding: 5px;  /* Adds padding inside the table (note: padding on table element itself may not have effect; better on cells) */
+  font-size: 1rem;  /* Sets font size to 16px (default) */
+  font-family: Arial, sans-serif;  /* Uses Arial font or fallback sans-serif */
+  min-width: 300px;  /* Table will never be narrower than 300px */
+  width: 50%;  /* Table takes up 50% of the parent container’s width */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  /* Adds subtle shadow below and around the table */
+}
+.styled-table thead tr {
+  background-color: #483434;  /* Dark brown background for the table header row */
+  color: #ffffff;  /* White text color for header cells */
+  text-align: left;  /* Align header text to the left */
+}
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;  /* Adds 12px padding top/bottom and 15px left/right inside each cell */
+  border: 1px solid #ddd;  /* Light gray border around each cell */
+  text-align: center;  /* Centers text horizontally within each cell */
+}
+.styled-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+/* .styled-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+} */
+.styled-table tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+.styled-table tbody tr:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+.logout-button {
+  display: flex; /* Use flexbox layout */
+  justify-content: center; /* Center child elements horizontally */
+}

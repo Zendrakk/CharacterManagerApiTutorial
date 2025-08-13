@@ -69,8 +69,11 @@ export class AuthService {
   }
 
   logout(): void {
+    // Remove tokens from local storage immediately
     localStorage.removeItem('auth_token');
     localStorage.removeItem('refresh_token');
+    // TODO: notify server to revoke refresh token
+    // return this.http.post(`${this.apiUrl}/logout`, { refreshToken });
   }
 
   getCurrentUserId(): string | null {

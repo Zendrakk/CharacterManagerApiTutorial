@@ -50,6 +50,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();
 builder.Services.AddScoped<ICharacterMetadataService, CharacterMetadataService>();
+builder.Services.AddScoped<ILookupDataService, LookupDataService>();
 
 // Add Swagger services to the container
 builder.Services.AddEndpointsApiExplorer();  // Adds support for discovering and documenting endpoints so they can be shown in Swagger UI.

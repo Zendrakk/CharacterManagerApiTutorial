@@ -42,3 +42,7 @@ h2 {
   display: flex; /* Use flexbox layout */
   justify-content: center; /* Center child elements horizontally */
 }
+.error {
+  display: grid;
+  text-align: center;
+}

@@ -1,7 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CharacterService } from '../../services/character.service';
-import { Character } from '../../models/character';
 import { LogoutButtonComponent } from "../../logout-button/logout-button.component";
 
 @Component({
@@ -12,19 +11,10 @@ import { LogoutButtonComponent } from "../../logout-button/logout-button.compone
   styleUrl: './landing-page.component.css'
 })
 export class LandingPageComponent implements OnInit {
-  private characterService = inject(CharacterService);
-  characters: Character[] = [];
-  loading = true;
+  constructor(public characterService: CharacterService) {}
 
-  ngOnInit() {
-    this.characterService.getCharacters().subscribe({
-      next: (data) => {
-        this.characters = data;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      }
-    });
+  ngOnInit(): void {
+    // Fetch characters (lookup data will be loaded automatically in service)
+    this.characterService.fetchCharacters();
   }
 }

@@ -12,26 +12,31 @@
     </tr>
   </thead>
   <tbody>
-    @if (loading) {
+    @if (characterService.loading()) {
       <tr>Loading characters...</tr>
     }
-    @if (!loading && characters.length > 0) {
-      @for (char of characters; track $index) {
+    @if (characterService.error()) {
+      <tr>{{ characterService.error() }}</tr>
+    }
+    @if (!characterService.loading() && !characterService.error() && characterService.characterWithNames().length > 0) {
+      @for (char of characterService.characterWithNames(); track $index) {
         <tr>
           <td><strong>{{ char.name | titlecase }}</strong></td>
           <td>{{ char.level }}</td>
-          <td>{{ char.realmId }}</td>
-          <td>{{ char.raceId }}</td>
-          <td>{{ char.classId }}</td>
-          <td>{{ char.factionId }}</td>
+          <td>{{ char.realmName }}</td>
+          <td>{{ char.raceName }}</td>
+          <td>{{ char.className }}</td>
+          <td>{{ char.factionName }}</td>
         </tr>
       }
     }
-    @if (!loading && characters.length === 0) {
+    @if (!characterService.loading() && !characterService.error() && characterService.characterWithNames().length === 0) {
       <tr>No characters found.</tr>
     }
   </tbody>
 </table>
+
+<!-- Logout button component -->
 <div class="logout-button">
   <app-logout-button></app-logout-button>
 </div>

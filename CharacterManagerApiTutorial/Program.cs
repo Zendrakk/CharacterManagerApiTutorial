@@ -49,7 +49,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Register application services with scoped lifetime for dependency injection (AddScoped means a new instance is created per HTTP request).
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();
-builder.Services.AddScoped<ICharacterMetadataService, CharacterMetadataService>();
 builder.Services.AddScoped<ILookupDataService, LookupDataService>();
 
 // Add Swagger services to the container

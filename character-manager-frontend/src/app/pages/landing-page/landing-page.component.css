@@ -25,15 +25,16 @@ h2 {
   border: 1px solid #ddd;  /* Light gray border around each cell */
   text-align: center;  /* Centers text horizontally within each cell */
 }
+/* Add a light gray bottom border to each row in the table body */
 .styled-table tbody tr {
   border-bottom: 1px solid #dddddd;
 }
-/* .styled-table tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
-} */
+/* For the last row in the table body, use a thicker green bottom border for emphasis */
 .styled-table tbody tr:last-of-type {
   border-bottom: 2px solid #009879;
 }
+/* When hovering over a table body row, change its background to light gray 
+   and show a pointer cursor to indicate it is clickable */
 .styled-table tbody tr:hover {
   background-color: #f1f1f1;
   cursor: pointer;
@@ -41,8 +42,4 @@ h2 {
 .logout-button {
   display: flex; /* Use flexbox layout */
   justify-content: center; /* Center child elements horizontally */
-}
-.error {
-  display: grid;
-  text-align: center;
 }

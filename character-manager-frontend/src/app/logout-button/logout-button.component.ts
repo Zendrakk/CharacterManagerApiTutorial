@@ -15,7 +15,9 @@ export class LogoutButtonComponent {
   private router = inject(Router);
 
   logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']); // redirect to login route
+    this.authService.logout().subscribe({
+      next: () => this.router.navigate(['/login']), // redirect to login route,
+      error: (err) => console.error(err.message)
+    });
   }
 }

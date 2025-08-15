@@ -16,10 +16,10 @@
       <tr>Loading characters...</tr>
     }
     @if (characterService.error()) {
-      <tr>{{ characterService.error() }}</tr>
+      <tr>Error: {{ characterService.error() }}</tr>
     }
-    @if (!characterService.loading() && !characterService.error() && characterService.characterWithNames().length > 0) {
-      @for (char of characterService.characterWithNames(); track $index) {
+    @if (!characterService.loading() && !characterService.error() && characterService.characterDtos().length > 0) {
+      @for (char of characterService.characterDtos(); track $index) {
         <tr>
           <td><strong>{{ char.name | titlecase }}</strong></td>
           <td>{{ char.level }}</td>
@@ -30,7 +30,7 @@
         </tr>
       }
     }
-    @if (!characterService.loading() && !characterService.error() && characterService.characterWithNames().length === 0) {
+    @if (!characterService.loading() && !characterService.error() && characterService.characterDtos().length === 0) {
       <tr>No characters found.</tr>
     }
   </tbody>

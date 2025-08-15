@@ -14,7 +14,6 @@ export class LandingPageComponent implements OnInit {
   constructor(public characterService: CharacterService) {}
 
   ngOnInit(): void {
-    // Fetch characters (lookup data will be loaded automatically in service)
-    this.characterService.fetchCharacters();
+    this.characterService.getCharacters();
   }
 }

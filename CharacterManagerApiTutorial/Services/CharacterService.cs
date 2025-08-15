@@ -11,22 +11,38 @@ namespace CharacterManagerApiTutorial.Services
 
 
         /// <summary>
-        /// Retrieves all characters associated with a specific user ID (userGuid).
+        /// Retrieves all characters associated with a specific user ID (userGuid) and convert to CharacterDtos.
         /// </summary>
-        public async Task<Result<List<Character>>> GetCharactersAsync(Guid userGuid)
+        public async Task<Result<List<CharacterDto>>> GetCharactersAsync(Guid userGuid)
         {
             // Step 1: Validate userGuid
             if (userGuid == Guid.Empty)
-                return Result<List<Character>>.Failure("Invalid user ID.");
+                return Result<List<CharacterDto>>.Failure("Invalid user ID.");
 
             // Step 2: Fetch only characters created by this user
             var characters = await _context.Characters
                 .Where(c => c.UserId == userGuid)
                 .ToListAsync();
 
-            // Step 3: Return success result with the list of characters
+            // Step 3: Map to DTO with lookup names
+            var characterDtos = characters.Select(c => new CharacterDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Level = c.Level,
+                FactionId = c.FactionId,
+                FactionName = _context.FactionTypes.FirstOrDefault(f => f.Id == c.FactionId)?.Name ?? "",
+                RaceId = c.RaceId,
+                RaceName = _context.RaceTypes.FirstOrDefault(r => r.Id == c.RaceId)?.Name ?? "",
+                ClassId = c.ClassId,
+                ClassName = _context.ClassTypes.FirstOrDefault(cl => cl.Id == c.ClassId)?.Name ?? "",
+                RealmId = c.RealmId,
+                RealmName = _context.Realms.FirstOrDefault(re => re.Id == c.RealmId)?.Name ?? ""
+            }).ToList();
+
+            // Step 4: Return success result with the list of characters DTOs
             _logger.LogInformation("Fetching characters for user ID: {UserGuid}", userGuid);
-            return Result<List<Character>>.Success(characters);
+            return Result<List<CharacterDto>>.Success(characterDtos);
         }
 
 

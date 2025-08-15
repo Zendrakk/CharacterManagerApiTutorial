@@ -1,6 +1,6 @@
-﻿using CharacterManagerApiTutorial.Models;
+﻿using CharacterManagerApiTutorial.Data;
+using CharacterManagerApiTutorial.Models;
 using CharacterManagerApiTutorial.Models.Auth;
-using CharacterManagerApiTutorial.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -135,6 +135,49 @@ namespace CharacterManagerApiTutorial.Services
             // Step 6: Return a success result with the new token data
             _logger.LogInformation("Successfully refreshed token for user: '{userId}'", user.Id);
             return Result<TokenResponseDto>.Success(tokenResponse);
+        }
+
+
+        /// <summary>
+        /// Logs out a user by revoking their refresh token and expiration.
+        /// </summary>
+        public async Task<Result<bool>> LogoutAsync(LogoutRequest request) 
+        {
+            // Check if the request or the refresh token is null/empty
+            if (request is null || string.IsNullOrWhiteSpace(request.RefreshToken))
+                return Result<bool>.Failure("Refresh token required.");
+
+            // Look up the user in the database by the provided refresh token
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.RefreshToken == request.RefreshToken);
+            
+            // If no user is found with this refresh token, return a failure result
+            if (user == null)
+                return Result<bool>.Failure("User with this refresh token not found.");
+
+            // Revoke the refresh token by clearing the token and its expiration
+            user.RefreshToken = null;
+            user.RefreshTokenExpiration = null;
+
+            try
+            {
+                // Save changes to the database
+                await _context.SaveChangesAsync();
+
+                // Log successful logout
+                _logger.LogInformation("Successfully logged out {Username}", user.Username);
+
+                // Return a success result
+                return Result<bool>.Success(true);
+            }
+            catch (Exception ex) 
+            {
+                // Log any exception that occurs during logout
+                _logger.LogError(ex, "Exception occurred while logging out user '{Username}'.", user.Username);
+
+                // Return a failure result containing the exception message
+                return Result<bool>.Failure($"Failed to log out user with the following error: {ex.Message}");
+            }
         }
 
 

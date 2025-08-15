@@ -8,5 +8,6 @@ namespace CharacterManagerApiTutorial.Services
         Task<Result<User>> RegisterAsync(UserDto user);
         Task<Result<TokenResponseDto>> LoginAsync(UserDto user);
         Task<Result<TokenResponseDto>> RefreshTokensAsync(RefreshTokenRequestDto request);
+        Task<Result<bool>> LogoutAsync(LogoutRequest request);
     }
 }

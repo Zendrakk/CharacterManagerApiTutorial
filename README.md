@@ -39,7 +39,7 @@ CharacterManagerApiTutorial/
 ├── Controllers/
 │   ├── AuthController.cs
 │   ├── CharacterController.cs
-│   └── CharacterMetadataController.cs
+│   └── LookupDataController.cs
 │
 ├── Models/
 │   ├── Character.cs
@@ -48,12 +48,14 @@ CharacterManagerApiTutorial/
 │   ├── FactionType.cs
 │   ├── RaceType.cs
 │   ├── Realm.cs
+|   ├── Result.cs
+|   ├── LookupDataDto.cs
 │   └── Auth (UserDto, TokenResponseDto, etc.)
 │
 ├── Services/
 │   ├── AuthService.cs / IAuthService.cs
 │   ├── CharacterService.cs / ICharacterService.cs
-│   └── CharacterMetadataService.cs / ICharacterMetadataService.cs
+│   └── LookupDataService.cs / ILookupDataService.cs
 │
 ├── Data/
 │   └── CharacterManagerDbContext.cs
@@ -66,8 +68,7 @@ CharacterManagerApiTutorial/
 │   │   └── AuthControllerTests.cs
 │   └── Services/
 │       ├── AuthTests.cs
-│       ├── CharacterTests.cs
-│       └── CharacterMetadataTests.cs
+│       └── CharacterTests.cs
 ```
 
 ## 🔍 API Documentation with Swagger UI
@@ -104,15 +105,11 @@ All endpoints are prefixed with `/api`.
 | PUT    | `/characters/{id}`| Update a character       |
 | DELETE | `/characters/{id}`| Delete a character       |
 
-### Metadata
+### LookupData
 
 | Method | Endpoint             | Description                    |
 |--------|----------------------|--------------------------------|
-| GET    | `/character-metadata/factions`  | Get faction types   |
-| GET    | `/character-metadata/races`     | Get race types      |
-| GET    | `/character-metadata/classes`   | Get class types     |
-| GET    | `/character-metadata/realms`    | Get realms          |
-| GET    | `/character-metadata/charactermappings`    | Get character mappings          |
+| GET    | `/lookupdata`        | Get character metadata         |
 
 ## 🚫 Character Restrictions
 
@@ -182,7 +179,6 @@ This helps maintain narrative and gameplay consistency in any game built on top 
 - Services:
   - `AuthTests.cs`
   - `CharacterTests.cs`
-  - `CharacterMetadataTests.cs`
 
 ## 📬 Testing the API with `CharacterManagerApiTutorial.http`
 

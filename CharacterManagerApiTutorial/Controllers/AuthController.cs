@@ -61,5 +61,21 @@ namespace CharacterManagerApiTutorial.Controllers
 
             return Ok(result.Value);
         }
+
+        [HttpPost("logout")]
+        public async Task<ActionResult<bool>> Logout(LogoutRequest request)
+        {
+            _logger.LogInformation("Logout attempt for the following refresh token: {refreshToken}", request.RefreshToken);
+
+            var result = await _authService.LogoutAsync(request);
+
+            if (!result.IsSuccess)
+            {
+                _logger.LogWarning("Logout failed for the following refresh token: {refreshToken}, Error: {Error}", request.RefreshToken, result.Error);
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
     }
 }

@@ -429,6 +429,129 @@ namespace CharacterManagerApiTutorial.Tests.Services
 
 
         //====================================================
+        //  LOGOUT TESTS
+        //====================================================
+
+        [Fact]
+        public async Task LogoutAsync_EmptyRefreshToken_ReturnsFailure()
+        {
+            // Arrange
+            var authService = CreateAuthService(out var context, out var mockLogger);
+
+            var userId = Guid.NewGuid();
+            var password = "Password1";
+            var refreshToken = Guid.NewGuid().ToString();
+
+            var user = new User
+            {
+                Id = userId,
+                Username = "testuser",
+                PasswordHash = new PasswordHasher<User>().HashPassword(null!, password),
+                Role = "user",
+                RefreshToken = refreshToken,
+                RefreshTokenExpiration = DateTime.UtcNow.AddDays(7)
+            };
+            context.Users.Add(user);
+            await context.SaveChangesAsync();
+
+            var request = new LogoutRequest
+            {
+                RefreshToken = ""
+            };
+
+            // Act
+            var result = await authService.LogoutAsync(request);
+
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.False(result.Value);
+            Assert.Equal("Refresh token required.", result.Error);
+        }
+
+
+        [Fact]
+        public async Task LogoutAsync_InvalidRefreshToken_ReturnsFailure()
+        {
+            // Arrange
+            var authService = CreateAuthService(out var context, out var mockLogger);
+
+            var userId = Guid.NewGuid();
+            var password = "Password1";
+            var refreshToken = Guid.NewGuid().ToString();
+
+            var user = new User
+            {
+                Id = userId,
+                Username = "testuser",
+                PasswordHash = new PasswordHasher<User>().HashPassword(null!, password),
+                Role = "user",
+                RefreshToken = refreshToken,
+                RefreshTokenExpiration = DateTime.UtcNow.AddDays(7)
+            };
+            context.Users.Add(user);
+            await context.SaveChangesAsync();
+
+            var request = new LogoutRequest
+            {
+                RefreshToken = "12345"
+            };
+
+            // Act
+            var result = await authService.LogoutAsync(request);
+
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.False(result.Value);
+            Assert.Equal("User with this refresh token not found.", result.Error);
+        }
+
+
+        [Fact]
+        public async Task LogoutAsync_ValidLogoutRequest_ReturnsSuccess()
+        {
+            // Arrange
+            var authService = CreateAuthService(out var context, out var mockLogger);
+
+            var userId = Guid.NewGuid();
+            var password = "Password1";
+            var refreshToken = Guid.NewGuid().ToString();
+
+            var user = new User
+            {
+                Id = userId,
+                Username = "testuser",
+                PasswordHash = new PasswordHasher<User>().HashPassword(null!, password),
+                Role = "user",
+                RefreshToken = refreshToken,
+                RefreshTokenExpiration = DateTime.UtcNow.AddDays(7)
+            };
+            context.Users.Add(user);
+            await context.SaveChangesAsync();
+
+            var request = new LogoutRequest
+            {
+                RefreshToken = refreshToken
+            };
+
+            // Act
+            var result = await authService.LogoutAsync(request);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.True(result.Value);
+
+            mockLogger.Verify(x =>
+                x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Equals("Successfully logged out user ID: " + userId.ToString())),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
+        }
+
+
+        //====================================================
         //  PRIVATE METHODS
         //====================================================
 

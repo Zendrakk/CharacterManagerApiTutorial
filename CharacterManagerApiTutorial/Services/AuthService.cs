@@ -165,7 +165,7 @@ namespace CharacterManagerApiTutorial.Services
                 await _context.SaveChangesAsync();
 
                 // Log successful logout
-                _logger.LogInformation("Successfully logged out {Username}", user.Username);
+                _logger.LogInformation("Successfully logged out user ID: {Id}", user.Id);
 
                 // Return a success result
                 return Result<bool>.Success(true);
@@ -173,7 +173,7 @@ namespace CharacterManagerApiTutorial.Services
             catch (Exception ex) 
             {
                 // Log any exception that occurs during logout
-                _logger.LogError(ex, "Exception occurred while logging out user '{Username}'.", user.Username);
+                _logger.LogError(ex, "Exception occurred while logging out user ID: {Id}", user.Id);
 
                 // Return a failure result containing the exception message
                 return Result<bool>.Failure($"Failed to log out user with the following error: {ex.Message}");

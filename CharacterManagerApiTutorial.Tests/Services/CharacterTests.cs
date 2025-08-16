@@ -4,6 +4,8 @@ using CharacterManagerApiTutorial.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace CharacterManagerApiTutorial.Tests.Services
 {
@@ -43,6 +45,12 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Arrange
             var characterService = CreateCharacterService(out var context, out var mockLogger);
             var userGuid = Guid.NewGuid();
+
+            context.FactionTypes.Add(new FactionType { Id = 1, Name = "Light Side" });
+            context.RaceTypes.Add(new RaceType { Id = 1, Name = "Human" });
+            context.ClassTypes.Add(new ClassType { Id = 1, Name = "Warrior" });
+            context.Realms.Add(new Realm { Id = 1, Name = "Frostgard", Type = "PVP" });
+
             context.Characters.AddRange(
                 new Character { Id = 1, Name = "tester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid }
             );
@@ -54,14 +62,13 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Assert
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value);
-            Assert.IsType<Result<List<CharacterDto>>>(result);
             Assert.Single(result.Value);
-            Assert.Contains(result.Value, c => c.Name == "tester");
-            Assert.Contains(result.Value, c => c.Level == 40);
-            Assert.Contains(result.Value, c => c.FactionName == "Light Side");
-            Assert.Contains(result.Value, c => c.RaceName == "Human");
-            Assert.Contains(result.Value, c => c.ClassName == "Warrior");
-            Assert.Contains(result.Value, c => c.RealmName == "Frostgard");
+            Assert.Equal("tester", result.Value[0].Name);
+            Assert.Equal(40, result.Value[0].Level);
+            Assert.Equal("Light Side", result.Value[0].FactionName);
+            Assert.Equal("Human", result.Value[0].RaceName);
+            Assert.Equal("Warrior", result.Value[0].ClassName);
+            Assert.Equal("Frostgard", result.Value[0].RealmName);
 
             mockLogger.Verify(x =>
                 x.Log(

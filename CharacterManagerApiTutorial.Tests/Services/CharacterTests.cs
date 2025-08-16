@@ -56,7 +56,12 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.NotNull(result.Value);
             Assert.IsType<Result<List<CharacterDto>>>(result);
             Assert.Single(result.Value);
-            Assert.Contains(result.Value, c => c.Name == "tester" && c.FactionName == "Light Side" && c.RaceName == "Human" && c.ClassName == "Warrior" && c.RealmName == "Frostgard");
+            Assert.Contains(result.Value, c => c.Name == "tester");
+            Assert.Contains(result.Value, c => c.Level == 40);
+            Assert.Contains(result.Value, c => c.FactionName == "Light Side");
+            Assert.Contains(result.Value, c => c.RaceName == "Human");
+            Assert.Contains(result.Value, c => c.ClassName == "Warrior");
+            Assert.Contains(result.Value, c => c.RealmName == "Frostgard");
 
             mockLogger.Verify(x =>
                 x.Log(

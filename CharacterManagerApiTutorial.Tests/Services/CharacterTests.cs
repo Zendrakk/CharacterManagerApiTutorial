@@ -57,8 +57,8 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.NotNull(result.Value);
             Assert.IsType<Result<List<CharacterDto>>>(result);
             Assert.Equal(2, result.Value.Count);
-            Assert.Contains(result.Value, c => c.Name == "tester");
-            Assert.Contains(result.Value, c => c.Name == "tester2");
+            Assert.Contains(result.Value, c => c.Name == "tester" && c.RealmName == "Frostgard");
+            Assert.Contains(result.Value, c => c.Name == "tester2" && c.RealmName == "Frostgard");
 
             mockLogger.Verify(x =>
                 x.Log(

@@ -49,7 +49,6 @@ namespace CharacterManagerApiTutorial.Tests.Services
             context.FactionTypes.Add(new FactionType { Id = 1, Name = "Light Side" });
             context.RaceTypes.Add(new RaceType { Id = 1, Name = "Human" });
             context.ClassTypes.Add(new ClassType { Id = 1, Name = "Warrior" });
-            context.Realms.Add(new Realm { Id = 1, Name = "Frostgard", Type = "Neutral" });
 
             context.Characters.AddRange(
                 new Character { Id = 1, Name = "tester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid }

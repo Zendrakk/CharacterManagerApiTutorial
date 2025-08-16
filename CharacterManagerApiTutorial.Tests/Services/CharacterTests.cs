@@ -55,10 +55,10 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Assert
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value);
-            Assert.IsType<Result<List<Character>>>(result);
+            Assert.IsType<Result<List<CharacterDto>>>(result);
             Assert.Equal(2, result.Value.Count);
-            Assert.Contains(result.Value, c => c.Name == "tester" && c.UserId == userGuid);
-            Assert.Contains(result.Value, c => c.Name == "tester2" && c.UserId == userGuid);
+            Assert.Contains(result.Value, c => c.Name == "tester");
+            Assert.Contains(result.Value, c => c.Name == "tester2");
 
             mockLogger.Verify(x =>
                 x.Log(
@@ -84,7 +84,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Assert
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value);
-            Assert.IsType<Result<List<Character>>>(result);
+            Assert.IsType<Result<List<CharacterDto>>>(result);
             Assert.Empty(result.Value);
 
             mockLogger.Verify(x =>

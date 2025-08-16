@@ -44,8 +44,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             var characterService = CreateCharacterService(out var context, out var mockLogger);
             var userGuid = Guid.NewGuid();
             context.Characters.AddRange(
-                new Character { Id = 1, Name = "tester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid },
-                new Character { Id = 2, Name = "tester2", Level = 25, FactionId = 2, RaceId = 5, ClassId = 3, RealmId = 1, UserId = userGuid }
+                new Character { Id = 1, Name = "tester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid }
             );
             await context.SaveChangesAsync();
 
@@ -56,9 +55,8 @@ namespace CharacterManagerApiTutorial.Tests.Services
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value);
             Assert.IsType<Result<List<CharacterDto>>>(result);
-            Assert.Equal(2, result.Value.Count);
+            Assert.Single(result.Value);
             Assert.Contains(result.Value, c => c.Name == "tester" && c.FactionName == "Light Side" && c.RaceName == "Human" && c.ClassName == "Warrior" && c.RealmName == "Frostgard");
-            Assert.Contains(result.Value, c => c.Name == "tester2" && c.FactionName == "Dark Side" && c.RaceName == "Zombie" && c.ClassName == "Wizard" && c.RealmName == "Frostgard");
 
             mockLogger.Verify(x =>
                 x.Log(

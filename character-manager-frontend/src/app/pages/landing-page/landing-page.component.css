@@ -43,3 +43,24 @@ h2 {
   display: flex; /* Use flexbox layout */
   justify-content: center; /* Center child elements horizontally */
 }
+.delete-button {
+  background-color: #d9534f;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+.delete-button:hover {
+  background-color: #c9302c;
+}
+.edit-button {
+  background-color: #ffffff;
+  border: 2px solid #ddd;
+  color: black;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0.75rem;
+  font-size: 1rem;
+}

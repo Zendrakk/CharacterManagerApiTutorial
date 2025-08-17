@@ -16,4 +16,18 @@ export class LandingPageComponent implements OnInit {
   ngOnInit(): void {
     this.characterService.getCharacters();
   }
+
+  // Call delete on button click
+  deleteCharacter(id: number) {
+    this.characterService.deleteCharacter(id).subscribe({
+      next: (success) => {
+        if (success) {
+          console.log(`Character ${id} deleted successfully`);
+        } else {
+          console.warn(`Failed to delete character ${id}`);
+        }
+      },
+      error: (err) => console.error(err)
+    });
+  }
 }

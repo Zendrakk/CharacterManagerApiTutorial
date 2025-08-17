@@ -9,17 +9,18 @@
       <th>Race</th>
       <th>Class</th>
       <th>Faction</th>
+      <th>Delete</th>
     </tr>
   </thead>
   <tbody>
-    @if (characterService.loading()) {
+    @if (characterService.loadingSignal()) {
       <tr>Loading characters...</tr>
     }
-    @if (characterService.error()) {
-      <tr>Error: {{ characterService.error() }}</tr>
+    @if (characterService.errorSignal()) {
+      <tr>Error: {{ characterService.errorSignal() }}</tr>
     }
-    @if (!characterService.loading() && !characterService.error() && characterService.characterDtos().length > 0) {
-      @for (char of characterService.characterDtos(); track $index) {
+    @if (!characterService.loadingSignal() && !characterService.errorSignal() && characterService.characterDtosSignal().length > 0) {
+      @for (char of characterService.characterDtosSignal(); track $index) {
         <tr>
           <td><strong>{{ char.name | titlecase }}</strong></td>
           <td>{{ char.level }}</td>
@@ -27,10 +28,11 @@
           <td>{{ char.raceName }}</td>
           <td>{{ char.className }}</td>
           <td>{{ char.factionName }}</td>
+          <td><button class="delete-button" (click)="deleteCharacter(char.id)">X</button></td>
         </tr>
       }
     }
-    @if (!characterService.loading() && !characterService.error() && characterService.characterDtos().length === 0) {
+    @if (!characterService.loadingSignal() && !characterService.errorSignal() && characterService.characterDtosSignal().length === 0) {
       <tr>No characters found.</tr>
     }
   </tbody>

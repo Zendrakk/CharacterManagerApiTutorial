@@ -61,6 +61,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Assert
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value);
+            Assert.IsType<Result<List<CharacterDisplayDto>>>(result);
             Assert.Single(result.Value);
             Assert.Equal("tester", result.Value[0].Name);
             Assert.Equal(40, result.Value[0].Level);
@@ -93,7 +94,7 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Assert
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value);
-            Assert.IsType<Result<List<CharacterDto>>>(result);
+            Assert.IsType<Result<List<CharacterDisplayDto>>>(result);
             Assert.Empty(result.Value);
 
             mockLogger.Verify(x =>
@@ -191,11 +192,11 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Arrange
             var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
-            var newCharacter = new Character { Id = 1, Name = "Tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
-            newCharacter = null;
+
+            CharacterDto? newCharacterDto = null;
 
             // Act
-            var result = await characterService.CreateCharacterAsync(newCharacter!, userGuid);
+            var result = await characterService.CreateCharacterAsync(newCharacterDto!, userGuid);
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -210,10 +211,10 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Arrange
             var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
-            var newCharacter = new Character { Id = 1, Name = "Tester", Level = 10, FactionId = 2, RaceId = 1, ClassId = 1, RealmId = 1 };
+            var newCharacterDto = new CharacterDto { Id = 1, Name = "Tester", Level = 10, FactionId = 2, RaceId = 1, ClassId = 1, RealmId = 1 };
 
             // Act
-            var result = await characterService.CreateCharacterAsync(newCharacter, userGuid);
+            var result = await characterService.CreateCharacterAsync(newCharacterDto, userGuid);
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -228,10 +229,10 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Arrange
             var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
-            var newCharacter = new Character { Id = 1, Name = "Tester", Level = 30, FactionId = 1, RaceId = 2, ClassId = 3, RealmId = 1 };
+            var newCharacterDto = new CharacterDto { Id = 1, Name = "Tester", Level = 30, FactionId = 1, RaceId = 2, ClassId = 3, RealmId = 1 };
 
             // Act
-            var result = await characterService.CreateCharacterAsync(newCharacter, userGuid);
+            var result = await characterService.CreateCharacterAsync(newCharacterDto, userGuid);
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -246,10 +247,10 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Arrange
             var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
-            var newCharacter = new Character { Id = 1, Name = "TesterTesterTester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
+            var newCharacterDto = new CharacterDto { Id = 1, Name = "TesterTesterTester", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
             // Act
-            var result = await characterService.CreateCharacterAsync(newCharacter, userGuid);
+            var result = await characterService.CreateCharacterAsync(newCharacterDto, userGuid);
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -263,10 +264,10 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Arrange
             var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
-            var newCharacter = new Character { Id = 1, Name = "Te", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
+            var newCharacterDto = new CharacterDto { Id = 1, Name = "Te", Level = 40, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
             // Act
-            var result = await characterService.CreateCharacterAsync(newCharacter, userGuid);
+            var result = await characterService.CreateCharacterAsync(newCharacterDto, userGuid);
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -281,10 +282,10 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Arrange
             var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
-            var newCharacter = new Character { Id = 1, Name = "Tester", Level = 0, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
+            var newCharacterDto = new CharacterDto { Id = 1, Name = "Tester", Level = 0, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
             // Act
-            var result = await characterService.CreateCharacterAsync(newCharacter, userGuid);
+            var result = await characterService.CreateCharacterAsync(newCharacterDto, userGuid);
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -298,10 +299,10 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Arrange
             var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
-            var newCharacter = new Character { Id = 1, Name = "Tester", Level = 51, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
+            var newCharacterDto = new CharacterDto { Id = 1, Name = "Tester", Level = 51, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
             // Act
-            var result = await characterService.CreateCharacterAsync(newCharacter, userGuid);
+            var result = await characterService.CreateCharacterAsync(newCharacterDto, userGuid);
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -316,12 +317,12 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Arrange
             var characterService = CreateCharacterService(out _, out _);
             var userGuid = Guid.NewGuid();
-            var newCharacter = new Character { Id = 1, Name = "Tester", Level = 30, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 2 };
-            var newCharacter2 = new Character { Id = 2, Name = "Tester", Level = 20, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 2 };
+            var newCharacterDto = new CharacterDto { Id = 1, Name = "Tester", Level = 30, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 2 };
+            var newCharacterDto2 = new CharacterDto { Id = 2, Name = "Tester", Level = 20, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 2 };
 
             // Act
-            var result = await characterService.CreateCharacterAsync(newCharacter, userGuid);
-            var result2 = await characterService.CreateCharacterAsync(newCharacter2, userGuid);
+            var result = await characterService.CreateCharacterAsync(newCharacterDto, userGuid);
+            var result2 = await characterService.CreateCharacterAsync(newCharacterDto2, userGuid);
 
             // Assert
             Assert.True(result.IsSuccess);
@@ -337,10 +338,10 @@ namespace CharacterManagerApiTutorial.Tests.Services
         {
             // Arrange
             var characterService = CreateCharacterService(out _, out _);
-            var newCharacter = new Character { Id = 1, Name = "Tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
+            var newCharacterDto = new CharacterDto { Id = 1, Name = "Tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
             // Act
-            var result = await characterService.CreateCharacterAsync(newCharacter, Guid.Empty);
+            var result = await characterService.CreateCharacterAsync(newCharacterDto, Guid.Empty);
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -355,10 +356,10 @@ namespace CharacterManagerApiTutorial.Tests.Services
             // Arrange
             var characterService = CreateCharacterService(out _, out var mockLogger);
             var userGuid = Guid.NewGuid();
-            var newCharacter = new Character { Id = 1, Name = "Tester", Level = 20, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
+            var newCharacterDto = new CharacterDto { Id = 1, Name = "Tester", Level = 20, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
             // Act
-            var result = await characterService.CreateCharacterAsync(newCharacter, userGuid);
+            var result = await characterService.CreateCharacterAsync(newCharacterDto, userGuid);
 
             // Assert
             Assert.True(result.IsSuccess);
@@ -392,9 +393,10 @@ namespace CharacterManagerApiTutorial.Tests.Services
             var newCharacter = new Character { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid };
             context.Characters.Add(newCharacter);
             await context.SaveChangesAsync();
+            var updatedCharacterDto = new CharacterDto { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
             // Act
-            var result = await characterService.UpdateCharacterAsync(1, newCharacter, Guid.Empty);
+            var result = await characterService.UpdateCharacterAsync(1, updatedCharacterDto, Guid.Empty);
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -412,9 +414,10 @@ namespace CharacterManagerApiTutorial.Tests.Services
             var newCharacter = new Character { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid };
             context.Characters.Add(newCharacter);
             await context.SaveChangesAsync();
+            var updatedCharacterDto = new CharacterDto { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1 };
 
             // Act
-            var result = await characterService.UpdateCharacterAsync(1, newCharacter, Guid.NewGuid());
+            var result = await characterService.UpdateCharacterAsync(1, updatedCharacterDto, Guid.NewGuid());
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -432,10 +435,10 @@ namespace CharacterManagerApiTutorial.Tests.Services
             var newCharacter = new Character { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid };
             context.Characters.Add(newCharacter);
             await context.SaveChangesAsync();
+            var updatedCharacterDto = new CharacterDto { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 10000 };
 
             // Act
-            newCharacter.RealmId = 100000;
-            var result = await characterService.UpdateCharacterAsync(1, newCharacter, userGuid);
+            var result = await characterService.UpdateCharacterAsync(1, updatedCharacterDto, userGuid);
             var updated = context.Characters.Find(1);
 
             // Assert
@@ -454,26 +457,21 @@ namespace CharacterManagerApiTutorial.Tests.Services
             var newCharacter = new Character { Id = 1, Name = "tester", Level = 10, FactionId = 1, RaceId = 1, ClassId = 1, RealmId = 1, UserId = userGuid };
             context.Characters.Add(newCharacter);
             await context.SaveChangesAsync();
+            var updatedCharacterDto = new CharacterDto { Id = 1, Name = "Updated Name", Level = 30, FactionId = 2, RaceId = 4, ClassId = 2, RealmId = 5 };
 
             // Act
-            newCharacter.Name = "Updated Name";
-            newCharacter.Level = 30;
-            newCharacter.FactionId = 2;
-            newCharacter.RaceId = 4;
-            newCharacter.ClassId = 2;
-            newCharacter.RealmId = 5;
-            var result = await characterService.UpdateCharacterAsync(1, newCharacter, userGuid);
+            var result = await characterService.UpdateCharacterAsync(1, updatedCharacterDto, userGuid);
             var updated = context.Characters.Find(1);
 
             // Assert
             Assert.NotNull(updated);
             Assert.True(result.IsSuccess);
-            Assert.Equal("updated name", updated.Name);
-            Assert.Equal(30, updated.Level);
-            Assert.Equal(2, updated.FactionId);
-            Assert.Equal(4, updated.RaceId);
-            Assert.Equal(2, updated.ClassId);
-            Assert.Equal(5, updated.RealmId);
+            Assert.Equal(updatedCharacterDto.Name, updated.Name);
+            Assert.Equal(updatedCharacterDto.Level, updated.Level);
+            Assert.Equal(updatedCharacterDto.FactionId, updated.FactionId);
+            Assert.Equal(updatedCharacterDto.RaceId, updated.RaceId);
+            Assert.Equal(updatedCharacterDto.ClassId, updated.ClassId);
+            Assert.Equal(updatedCharacterDto.RealmId, updated.RealmId);
 
             mockLogger.Verify(x =>
                 x.Log(

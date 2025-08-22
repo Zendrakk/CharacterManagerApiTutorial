@@ -1,0 +1,36 @@
+<div class="edit-panel">
+  <h3>Edit Character</h3>
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <label>Name: <input formControlName="name" /></label>
+    <label>Level: <input type="number" formControlName="level" /></label>
+    <label>Realm:</label>
+    <select formControlName="realmId">
+      @for (realm of lookupDataService.lookupDataDtoSignal()?.realms; track realm.id) {
+        <option [value]="realm.id">{{ realm.name }}</option>
+      }
+    </select>
+    <label>Race:</label>
+    <select formControlName="raceId">
+      @for (race of lookupDataService.lookupDataDtoSignal()?.raceTypes; track race.id) {
+        <option [value]="race.id">{{ race.name }}</option>
+      }
+    </select>
+    <label>Class:</label>
+    <select formControlName="classId">
+      @for (class of lookupDataService.lookupDataDtoSignal()?.classTypes; track class.id) {
+        <option [value]="class.id">{{ class.name }}</option>
+      }
+    </select>
+    <label>Faction:</label>
+    <select formControlName="factionId">
+      @for (faction of lookupDataService.lookupDataDtoSignal()?.factionTypes; track faction.id) {
+        <option [value]="faction.id">{{ faction.name }}</option>
+      }
+    </select>
+
+    <div class="button-row">
+        <button type="button" class="cancel-button" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="save-button">Save</button>
+    </div>
+  </form>
+</div>

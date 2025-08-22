@@ -19,10 +19,10 @@
     @if (characterService.errorSignal()) {
       <tr>Error: {{ characterService.errorSignal() }}</tr>
     }
-    @if (!characterService.loadingSignal() && !characterService.errorSignal() && characterService.characterDtosSignal().length > 0) {
-      @for (char of characterService.characterDtosSignal(); track $index) {
-        <tr>
-          <td><strong>{{ char.name | titlecase }}</strong></td>
+    @if (!characterService.loadingSignal() && !characterService.errorSignal() && characterService.characterDisplayDtosSignal().length > 0) {
+      @for (char of characterService.characterDisplayDtosSignal(); track char.id) {
+        <tr (click)="onSelect(char)" [class.selected]="selectedCharacterIdSignal() === char.id">
+          <td><strong [ngClass]="getFactionClass(char.factionName)">{{ char.name | titlecase }}</strong></td>
           <td>{{ char.level }}</td>
           <td>{{ char.realmName }}</td>
           <td>{{ char.raceName }}</td>
@@ -32,7 +32,7 @@
         </tr>
       }
     }
-    @if (!characterService.loadingSignal() && !characterService.errorSignal() && characterService.characterDtosSignal().length === 0) {
+    @if (!characterService.loadingSignal() && !characterService.errorSignal() && characterService.characterDisplayDtosSignal().length === 0) {
       <tr>No characters found.</tr>
     }
   </tbody>
@@ -42,3 +42,11 @@
 <div class="logout-button">
   <app-logout-button></app-logout-button>
 </div>
+
+<!-- Edit form appears when a character is selected -->
+@if (selectedCharacterIdSignal()) {
+  <app-character-edit 
+    [characterId]="selectedCharacterIdSignal()!"
+    (cancel)="selectedCharacterIdSignal.set(null)">
+  </app-character-edit>
+}

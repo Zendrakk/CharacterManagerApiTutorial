@@ -57,7 +57,7 @@ namespace CharacterManagerApiTutorial.Controllers
 
         // POST: api/character
         [HttpPost]
-        public async Task<IActionResult> CreateCharacter([FromBody] Character newCharacter)
+        public async Task<IActionResult> CreateCharacter([FromBody] CharacterDto newCharacterDto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId is null || !Guid.TryParse(userId, out var userGuid) || userGuid == Guid.Empty)
@@ -65,7 +65,7 @@ namespace CharacterManagerApiTutorial.Controllers
 
             _logger.LogInformation("CreateCharacter attempt for user ID: {UserGuid}", userGuid);
 
-            var result = await _characterService.CreateCharacterAsync(newCharacter, userGuid);
+            var result = await _characterService.CreateCharacterAsync(newCharacterDto, userGuid);
             if (!result.IsSuccess)
             {
                 _logger.LogWarning("Service failed to create character with the following error: {Error}", result.Error);
@@ -77,7 +77,7 @@ namespace CharacterManagerApiTutorial.Controllers
 
         // PUT: api/character/5
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateCharacter(int id, [FromBody] Character updatedCharacter)
+        public async Task<IActionResult> UpdateCharacter(int id, [FromBody] CharacterDto updatedCharacterDto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId is null || !Guid.TryParse(userId, out var userGuid) || userGuid == Guid.Empty)
@@ -85,7 +85,7 @@ namespace CharacterManagerApiTutorial.Controllers
 
             _logger.LogInformation("UpdateCharacter attempt for user ID: {UserGuid}", userGuid);
 
-            var result = await _characterService.UpdateCharacterAsync(id, updatedCharacter, userGuid);
+            var result = await _characterService.UpdateCharacterAsync(id, updatedCharacterDto, userGuid);
             if (!result.IsSuccess)
             {
                 _logger.LogWarning("Service failed to update character {id} with the following error: {Error}", id, result.Error);

@@ -11,12 +11,8 @@ export class LookupDataService {
   private readonly apiUrl = 'https://localhost:7234/api/lookupdata';
 
   // Signal holds the cached data
-  private _lookupDataSignal = signal<LookupDataDto | null>(null);
-
-  // Public getter to read the cached data
-  public get lookupData(): LookupDataDto | null {
-    return this._lookupDataSignal();
-  }
+  private _lookupDataDtoSignal = signal<LookupDataDto | null>(null);
+  public lookupDataDtoSignal = this._lookupDataDtoSignal.asReadonly();
 
   constructor(private http: HttpClient) {}
 
@@ -24,16 +20,16 @@ export class LookupDataService {
    * Fetch lookup data from the server.
    * Uses cache if data has already been loaded.
    */
-  fetchLookupData(): Observable<LookupDataDto> {
+  fetchLookupData(): void {
     // Return cached data if available
-    if (this._lookupDataSignal()) {
-      return of(this._lookupDataSignal()!); // '!' is safe because we checked above
-    }
+    if (this._lookupDataDtoSignal()) return; // already cached
+
 
     // Otherwise, fetch from server and cache it in the signal
-    return this.http.get<LookupDataDto>(this.apiUrl).pipe(
-      tap(data => this._lookupDataSignal.set(data))
-    );
+    this.http.get<LookupDataDto>(this.apiUrl).subscribe({
+      next: data => this._lookupDataDtoSignal.set(data),
+      error: err => console.error('Lookup fetch failed', err)
+    });
   }
 
   /**
@@ -41,7 +37,7 @@ export class LookupDataService {
    */
   refreshLookupData(): Observable<LookupDataDto> {
     return this.http.get<LookupDataDto>(this.apiUrl).pipe(
-      tap(data => this._lookupDataSignal.set(data))
+      tap(data => this._lookupDataDtoSignal.set(data))
     );
   }
 }

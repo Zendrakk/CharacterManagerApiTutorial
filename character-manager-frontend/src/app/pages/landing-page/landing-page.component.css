@@ -39,6 +39,9 @@ h2 {
   background-color: #f1f1f1;
   cursor: pointer;
 }
+tr.selected {
+  background-color: #f0f8ff; /* highlight */
+}
 .logout-button {
   display: flex; /* Use flexbox layout */
   justify-content: center; /* Center child elements horizontally */
@@ -63,4 +66,10 @@ h2 {
   cursor: pointer;
   padding: 0.75rem;
   font-size: 1rem;
+}
+.faction-light {
+  color: #2c7be5; /* Blue */
+}
+.faction-dark {
+  color: #dc3545; /* Red */
 }

@@ -13,11 +13,11 @@ namespace CharacterManagerApiTutorial.Services
         /// <summary>
         /// Retrieves all characters associated with a specific user ID (userGuid) and convert to CharacterDtos.
         /// </summary>
-        public async Task<Result<List<CharacterDto>>> GetCharactersAsync(Guid userGuid)
+        public async Task<Result<List<CharacterDisplayDto>>> GetCharactersAsync(Guid userGuid)
         {
             // Step 1: Validate userGuid
             if (userGuid == Guid.Empty)
-                return Result<List<CharacterDto>>.Failure("Invalid user ID.");
+                return Result<List<CharacterDisplayDto>>.Failure("Invalid user ID.");
 
             // Step 2: Fetch only characters created by this user
             var characters = await _context.Characters
@@ -25,7 +25,7 @@ namespace CharacterManagerApiTutorial.Services
                 .ToListAsync();
 
             // Step 3: Map to DTO with lookup names
-            var characterDtos = characters.Select(c => new CharacterDto
+            var characterDisplayDtos = characters.Select(c => new CharacterDisplayDto
             {
                 Id = c.Id,
                 Name = c.Name,
@@ -42,7 +42,7 @@ namespace CharacterManagerApiTutorial.Services
 
             // Step 4: Return success result with the list of characters DTOs
             _logger.LogInformation("Fetching characters for user ID: {UserGuid}", userGuid);
-            return Result<List<CharacterDto>>.Success(characterDtos);
+            return Result<List<CharacterDisplayDto>>.Success(characterDisplayDtos);
         }
 
 
@@ -72,44 +72,55 @@ namespace CharacterManagerApiTutorial.Services
         /// <summary>
         /// Creates a new character for a specific user (userGuid) after validating input, rules, and constraints.
         /// </summary>
-        public async Task<Result<Character>> CreateCharacterAsync(Character newCharacter, Guid userGuid)
+        public async Task<Result<Character>> CreateCharacterAsync(CharacterDto newCharacterDto, Guid userGuid)
         {
             // Step 1: Check to see if object is null.
-            if (newCharacter is null)
+            if (newCharacterDto is null)
                 return Result<Character>.Failure("Character is null.");
 
             // Step 2: Normalize and trim input strings once
-            newCharacter.Name = newCharacter.Name.Trim().ToLower();
+            newCharacterDto.Name = newCharacterDto.Name.Trim().ToLower();
 
-            // Step 3: Associate character with user
+            // Step 3: Validate name length (Min = 3 characters, Max = 15 characters).
+            if (string.IsNullOrWhiteSpace(newCharacterDto.Name) || newCharacterDto.Name.Length < 3 || newCharacterDto.Name.Length > 15)
+                return Result<Character>.Failure("Name must be between 3 and 15 characters.");
+
+            // Step 4: Validate level range.
+            if (newCharacterDto.Level < 1 || newCharacterDto.Level > 50)
+                return Result<Character>.Failure("Level must be between 1 and 50.");
+
+            // Step 5: Validate realm.
+            var isValidRealm = await ValidateRealm(newCharacterDto);
+            if (!isValidRealm)
+                return Result<Character>.Failure("Invalid realm ID.");
+
+            // Step 6: Prevent duplicate characters.
+            var isUnique = await CheckForDuplicateName(newCharacterDto);
+            if (!isUnique)
+                return Result<Character>.Failure("Character with the same name already exists.");
+
+            // Step 7: Create a new Character entity from the DTO
+            var newCharacter = new Character
+            {
+                Name = newCharacterDto.Name,
+                Level = newCharacterDto.Level,
+                FactionId = newCharacterDto.FactionId,
+                RaceId = newCharacterDto.RaceId,
+                ClassId = newCharacterDto.ClassId,
+                RealmId = newCharacterDto.RealmId
+            };
+
+            // Step 8: Associate character with user
             if (userGuid == Guid.Empty)
                 return Result<Character>.Failure("Invalid user ID.");
             newCharacter.UserId = userGuid;
 
-            // Step 4: Validate name length (Min = 3 characters, Max = 15 characters).
-            if (string.IsNullOrWhiteSpace(newCharacter.Name) || newCharacter.Name.Length < 3 || newCharacter.Name.Length > 15)
-                return Result<Character>.Failure("Name must be between 3 and 15 characters.");
-
-            // Step 5: Validate level range.
-            if (newCharacter.Level < 1 || newCharacter.Level > 50)
-                return Result<Character>.Failure("Level must be between 1 and 50.");
-
-            // Step 6: Validate realm.
-            var isValidRealm = await ValidateRealm(newCharacter);
-            if (!isValidRealm)
-                return Result<Character>.Failure("Invalid realm ID.");
-
-            // Step 7: Prevent duplicate characters.
-            var isUnique = await CheckForDuplicateName(newCharacter);
-            if (!isUnique)
-                return Result<Character>.Failure("Character with the same name already exists.");
-
-            // Step 8: Validate faction-race-class mapping.
+            // Step 9: Validate faction-race-class mapping.
             var isValidCombo = await ValidateFactionRaceClass(newCharacter);
             if (!isValidCombo)
                 return Result<Character>.Failure("Invalid faction-race-class combination.");
 
-            // Step 9: Persist to DB.
+            // Step 10: Persist to DB.
             try
             {
                 _context.Characters.Add(newCharacter);
@@ -128,10 +139,10 @@ namespace CharacterManagerApiTutorial.Services
         /// <summary>
         /// Updates an existing character for a specific user (userGuid) after validating input, rules, and constraints.
         /// </summary>
-        public async Task<Result> UpdateCharacterAsync(int id, Character updatedCharacter, Guid userGuid)
+        public async Task<Result> UpdateCharacterAsync(int id, CharacterDto updatedCharacterDto, Guid userGuid)
         {
             // Step 1: Check to see if object is null.
-            if (updatedCharacter is null)
+            if (updatedCharacterDto is null)
                 return Result.Failure("Character is null.");
 
             // Step 2: Validate userGuid.
@@ -147,37 +158,32 @@ namespace CharacterManagerApiTutorial.Services
                 return Result.Failure("Character not found or access denied.");
 
             // Step 5: Normalize and trim input strings once
-            updatedCharacter.Name = updatedCharacter.Name.Trim().ToLower();
+            updatedCharacterDto.Name = updatedCharacterDto.Name.Trim().ToLower();
 
             // Step 6: Validate name length (max 15 chars).
-            if (string.IsNullOrWhiteSpace(updatedCharacter.Name) || updatedCharacter.Name.Length > 15)
+            if (string.IsNullOrWhiteSpace(updatedCharacterDto.Name) || updatedCharacterDto.Name.Length > 15)
                 return Result.Failure("Name is invalid or exceeds 15 characters.");
 
             // Step 7: Validate level range.
-            if (updatedCharacter.Level < 1 || updatedCharacter.Level > 50)
+            if (updatedCharacterDto.Level < 1 || updatedCharacterDto.Level > 50)
                 return Result.Failure("Level must be between 1 and 50.");
 
             // Step 8: Validate realm
-            var isValidRealm = await ValidateRealm(updatedCharacter);
+            var isValidRealm = await ValidateRealm(updatedCharacterDto);
             if (!isValidRealm)
                 return Result<Character>.Failure("Invalid realm ID.");
 
             // Step 9: Check for duplicate name+realm if either changed.
-            if (!existingCharacter.Name.Equals(updatedCharacter.Name, StringComparison.OrdinalIgnoreCase) ||
-                existingCharacter.RealmId != updatedCharacter.RealmId)
+            if (!existingCharacter.Name.Equals(updatedCharacterDto.Name, StringComparison.OrdinalIgnoreCase) ||
+                existingCharacter.RealmId != updatedCharacterDto.RealmId)
             {
-                var isUnique = await CheckForDuplicateName(updatedCharacter);
+                var isUnique = await CheckForDuplicateName(updatedCharacterDto);
                 if (!isUnique)
                     return Result.Failure("Character with the same name already exists.");
             }
 
             // Step 10: Update properties.
-            existingCharacter.Name = updatedCharacter.Name;
-            existingCharacter.Level = updatedCharacter.Level;
-            existingCharacter.FactionId = updatedCharacter.FactionId;
-            existingCharacter.RaceId = updatedCharacter.RaceId;
-            existingCharacter.ClassId = updatedCharacter.ClassId;
-            existingCharacter.RealmId = updatedCharacter.RealmId;
+            MapCharacterProperties(existingCharacter, updatedCharacterDto);
 
             // Step 11: Validate faction-race-class combination.
             var isValidCombo = await ValidateFactionRaceClass(existingCharacter);
@@ -234,7 +240,7 @@ namespace CharacterManagerApiTutorial.Services
         /// <summary>
         /// Validates whether the specified character has a valid realm assignment.
         /// </summary>
-        private async Task<bool> ValidateRealm(Character character)
+        private async Task<bool> ValidateRealm(CharacterDto character)
         {
             // Return false if the character is null, or Realm Id is non-positive
             if (character is null || character.RealmId <= 0)
@@ -250,7 +256,7 @@ namespace CharacterManagerApiTutorial.Services
         /// <summary>
         /// Checks whether the given character's name and realm combination is unique.
         /// </summary>
-        private async Task<bool> CheckForDuplicateName(Character character)
+        private async Task<bool> CheckForDuplicateName(CharacterDto character)
         {
             // Return false if the input character is null
             if (character is null)
@@ -312,6 +318,23 @@ namespace CharacterManagerApiTutorial.Services
 
             // No valid class found for the given faction and race combination — validation fails
             return false;
+        }
+
+
+        /// <summary>
+        /// Maps values from a <see cref="CharacterDto"/> to an existing <see cref="Character"/> entity.
+        /// </summary>
+        private static void MapCharacterProperties(Character existing, CharacterDto dto)
+        {
+            // Update basic character details
+            existing.Name = dto.Name;
+            existing.Level = dto.Level;
+
+            // Update foreign key relationships
+            existing.FactionId = dto.FactionId;
+            existing.RaceId = dto.RaceId;
+            existing.ClassId = dto.ClassId;
+            existing.RealmId = dto.RealmId;
         }
     }
 }

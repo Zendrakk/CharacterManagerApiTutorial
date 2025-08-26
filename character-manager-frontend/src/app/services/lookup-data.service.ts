@@ -41,6 +41,9 @@ export class LookupDataService {
     );
   }
 
+  /**
+   * Updates the internal signal that holds lookup data.
+   */
   private setLookupData(lookupDataDto: LookupDataDto | null): void {
     this._lookupDataDtoSignal.set(lookupDataDto);
   }

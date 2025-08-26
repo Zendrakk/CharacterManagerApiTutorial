@@ -43,6 +43,8 @@ CharacterManagerApiTutorial/
 │
 ├── Models/
 │   ├── Character.cs
+│   ├── CharacterDisplayDto.cs
+│   ├── CharacterDto.cs
 │   ├── CharacterMappings.cs
 │   ├── ClassType.cs
 │   ├── FactionType.cs
@@ -50,7 +52,12 @@ CharacterManagerApiTutorial/
 │   ├── Realm.cs
 |   ├── Result.cs
 |   ├── LookupDataDto.cs
-│   └── Auth (UserDto, TokenResponseDto, etc.)
+|   └── Auth/
+|       ├── LogoutRequest.cs
+|       ├── RefreshTokenRequestDto.cs
+|       ├── TokenResponseDto.cs
+|       ├── User.cs
+│       └── UserDto.cs
 │
 ├── Services/
 │   ├── AuthService.cs / IAuthService.cs
@@ -90,20 +97,22 @@ All endpoints are prefixed with `/api`.
 
 ### Auth
 
-| Method | Endpoint              | Description              |
-|--------|-----------------------|--------------------------|
-| POST   | `/auth/register`      | Register new users       |
-| POST   | `/auth/login`         | Authenticate and get JWT |
-| POST   | `/auth/refresh-token` | Refresh access token     |
+| Method | Endpoint              | Description                |
+|--------|-----------------------|----------------------------|
+| POST   | `/auth/register`      | Register new users         |
+| POST   | `/auth/login`         | Authenticate and get JWT   |
+| POST   | `/auth/refresh-token` | Refresh access token       |
+| POST   | `/auth/logout`        | Revoke refresh token in DB |
 
 ### Characters
 
-| Method | Endpoint          | Description              |
-|--------|-------------------|--------------------------|
-| GET    | `/characters`     | Get all characters       |
-| POST   | `/characters`     | Create new character     |
-| PUT    | `/characters/{id}`| Update a character       |
-| DELETE | `/characters/{id}`| Delete a character       |
+| Method | Endpoint           | Description              |
+|--------|--------------------|--------------------------|
+| GET    | `/character`      | Get all characters       |
+| GET    | `/character/{id}` | Get character by Id      |
+| POST   | `/character`      | Create new character     |
+| PUT    | `/character/{id}` | Update a character       |
+| DELETE | `/character/{id}` | Delete a character       |
 
 ### LookupData
 

@@ -1,36 +1,101 @@
 <div class="edit-panel">
   <h3>Edit Character</h3>
   <form [formGroup]="form" (ngSubmit)="save()">
+
+    <!-- Name field -->
     <label>Name: <input formControlName="name" /></label>
+    @if(form.get('name')?.touched && form.get('name')?.invalid) {
+      <div class="error-message">
+        @if(form.get('name')?.errors?.['required']) {
+          <small>Name is required. </small>
+        }
+        @if(form.get('name')?.errors?.['minlength']) {
+          <small>Name must be at least 3 characters. </small>
+        }
+        @if(form.get('name')?.errors?.['maxlength']) {
+          <small>Name cannot exceed 15 characters. </small>
+        }
+        @if(form.get('name')?.errors?.['pattern']) {
+          <small>Name can only contain letters (A–Z). </small>
+        }
+      </div>
+    }
+    
+    <!-- Level field -->
     <label>Level: <input type="number" formControlName="level" /></label>
+    @if (form.get('level')?.touched && form.get('level')?.invalid) {
+      <div class="error-message">
+        @if(form.get('level')?.errors?.['required']) {
+          <small>Level is required. </small>
+        }
+        @if(form.get('level')?.errors?.['min']) {
+          <small>Level must be at least 1. </small>
+        }
+        @if(form.get('level')?.errors?.['max']) {
+          <small>Level cannot exceed 50. </small>
+        }
+        @if(form.get('level')?.errors?.['pattern']) {
+          <small>Level must be numbers only. </small>
+        }
+      </div>
+    }
+
+    <!-- Realm select field -->
     <label>Realm:</label>
     <select formControlName="realmId">
       @for (realm of lookupDataService.lookupDataDtoSignal()?.realms; track realm.id) {
         <option [value]="realm.id">{{ realm.name }}</option>
       }
     </select>
+    @if (form.get('realmId')?.touched && form.get('realmId')?.invalid) {
+      <div class="error-message">
+        <small>Realm selection is required. </small>
+      </div>
+    }
+
+    <!-- Race select field -->
     <label>Race:</label>
     <select formControlName="raceId">
       @for (race of lookupDataService.lookupDataDtoSignal()?.raceTypes; track race.id) {
         <option [value]="race.id">{{ race.name }}</option>
       }
     </select>
+    @if (form.get('raceId')?.touched && form.get('raceId')?.invalid) {
+      <div class="error-message">
+        <small>Race selection is required. </small>
+      </div>
+    }
+
+    <!-- Class select field -->
     <label>Class:</label>
     <select formControlName="classId">
       @for (class of lookupDataService.lookupDataDtoSignal()?.classTypes; track class.id) {
         <option [value]="class.id">{{ class.name }}</option>
       }
     </select>
+    @if (form.get('classId')?.touched && form.get('classId')?.invalid) {
+      <div class="error-message">
+        <small>Class selection is required. </small>
+      </div>
+    }
+
+    <!-- Faction select field -->
     <label>Faction:</label>
     <select formControlName="factionId">
       @for (faction of lookupDataService.lookupDataDtoSignal()?.factionTypes; track faction.id) {
         <option [value]="faction.id">{{ faction.name }}</option>
       }
     </select>
+    @if (form.get('factionId')?.touched && form.get('factionId')?.invalid) {
+      <div class="error-message">
+        <small>Faction selection is required. </small>
+      </div>
+    }
 
+    <!-- Save and Cancel buttons -->
     <div class="button-row">
         <button type="button" class="cancel-button" (click)="onCancel()">Cancel</button>
-        <button type="submit" class="save-button">Save</button>
+        <button type="submit" class="save-button" [disabled]="form.invalid">Save</button>
     </div>
   </form>
 </div>

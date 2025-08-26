@@ -1,96 +1,116 @@
+/**
+ * Styles for the host element of a component.
+ */
 :host {
-  display: flex;
-  max-width: 300px;
+  display: flex; /* Enables flexible layout for child elements. */
+  max-width: 300px; /* Constrains the component width between 200px and 300px. */
   min-width: 200px;
-  margin: 1rem auto;
-  padding: 1.5rem;
-  border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  font-family: system-ui, sans-serif;
+  margin: 1rem auto; /* Centers the component horizontally with vertical spacing. */
+  padding: 1.5rem; /* Adds internal spacing between border and content. */
+  border-radius: 12px; /* Rounds the corners for a softer, modern look. */
+  background: #ffffff; /* Sets a white background for the component. */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Adds subtle shadow for depth. */
+  font-family: system-ui, sans-serif; /* Uses system default font with fallback to sans-serif. */
 }
 
 h3 {
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
-  text-align: center;
-  color: #333;
+  font-size: 1.4rem; /* Sets the font size to 1.4 times the root font size */
+  margin-bottom: 1rem; /* Adds spacing below the heading */
+  text-align: center; /* Centers the text horizontally */
+  color: #333; /* Dark gray text color for readability */
 }
 
 form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: flex; /* Uses flexbox layout for arranging child elements */
+  flex-direction: column; /* Stacks form fields vertically */
+  gap: 1rem; /* Adds 1rem spacing between each child element */
 }
 
 label {
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  display: block;
-  color: #555;
+  font-weight: 600; /* Makes the label text semi-bold */
+  margin-bottom: 0.25rem; /* Adds a small space below the label */
+  display: block; /* Ensures the label takes up the full width */
+  color: #555; /* Sets a medium gray text color */
 }
 
 input,
 select {
-  width: 100%;
-  padding: 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.2s ease-in-out;
+  width: 100%; /* Make the input/select take full width of its container */
+  padding: 0.6rem; /* Add padding inside the field for better readability */
+  border: 1px solid #ccc; /* Light gray border around the field */
+  border-radius: 8px; /* Rounded corners for a softer look */
+  font-size: 1rem; /* Standard font size for text inside the field */
+  transition: border-color 0.2s ease-in-out; /* Smooth transition when border color changes (e.g., on focus) */
 }
 
+/* Styles applied when <input> or <select> elements are focused (active for typing/selecting) */
 input:focus,
 select:focus {
-  border-color: #4a90e2;
-  outline: none;
+  border-color: #4a90e2; /* Change border to blue to indicate focus */
+  outline: none; /* Remove default browser outline for a cleaner look */
 }
 
 button {
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.2s ease-in-out;
+  padding: 0.75rem; /* Adds space inside the button for comfortable clicking */
+  font-size: 1rem; /* Sets readable font size */
+  border: none; /* Removes default button border */
+  border-radius: 4px; /* Rounds the corners slightly */
+  cursor: pointer; /* Changes cursor to pointer on hover to indicate clickable */
+  transition: background 0.2s ease-in-out;  /* Smooth transition for background color changes */
 }
 
+/* Change button background color on hover for visual feedback */
 button:hover {
-  background-color: #3a78c2;
-}
-
-button:disabled {
-  background-color: #bbb;
-  cursor: not-allowed;
+  background-color: #3a78c2; /* Darker blue when user hovers to indicate interactivity */
 }
 
 /* Wrap the button in a container inside your form */
 .button-row {
-  display: flex;
-  justify-content: flex-end; /* pushes button to right */
-  gap: 0.75rem; /* space between buttons */
-  width: 100%;              /* aligns with inputs */
+  display: flex; /* Use flex layout to arrange buttons horizontally */
+  justify-content: flex-end; /* Push buttons to the right side of the container */
+  gap: 0.75rem; /* Space between each button */
+  width: 100%; /* Make the row span full width of the parent container */
 }
 
-/* Primary Save button */
+/* Styles for the Save button */
 .save-button {
-  background-color: #4a90e2;
-  color: white;
-}
-.save-button:hover {
-  background-color: #3a78c2;
-}
-.save-button:disabled {
-  background-color: #bbb;
-  cursor: not-allowed;
+  background-color: #4a90e2; /* Primary blue background */
+  color: white; /* White text */
 }
 
-/* Secondary Cancel button */
-.cancel-button {
-  background-color: #f0f0f0;
-  color: #333;
-  border: 1px solid #ccc;
+/* Hover state for the Save button */
+.save-button:hover {
+  background-color: #3a78c2; /* Darker blue on hover */
 }
+
+/* Disabled state for the Save button */
+.save-button:disabled {
+  background-color: #bbb; /* Gray background when disabled */
+  cursor: not-allowed; /* Show "not-allowed" cursor when disabled */
+}
+
+/* Styles for the Cancel button */
+.cancel-button {
+  background-color: #f0f0f0; /* Light gray background */
+  color: #333; /* Dark gray text */
+  border: 1px solid #ccc; /* Light gray border */
+}
+
+/* Hover state for the Cancel button */
 .cancel-button:hover {
-  background-color: #e0e0e0;
+  background-color: #e0e0e0; /* Slightly darker gray on hover */
+}
+
+/* Styles for small text inside an error message container */
+.error-message small {
+  color: red; /* Red text to indicate error */
+  font-size: 0.9rem; /* Slightly smaller font size */
+  display: block; /* Forces onto its own line */
+  margin-top: 2px; /* Small spacing above the message */
+}
+
+/* Highlight invalid form fields after user interaction */
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched {
+  border: 1px solid red; /* Red border indicates validation error */
 }

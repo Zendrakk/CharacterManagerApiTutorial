@@ -65,6 +65,11 @@ namespace CharacterManagerApiTutorial.Controllers
 
             _logger.LogInformation("CreateCharacter attempt for user ID: {UserGuid}", userGuid);
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var result = await _characterService.CreateCharacterAsync(newCharacterDto, userGuid);
             if (!result.IsSuccess)
             {
@@ -84,6 +89,11 @@ namespace CharacterManagerApiTutorial.Controllers
                 return Unauthorized();
 
             _logger.LogInformation("UpdateCharacter attempt for user ID: {UserGuid}", userGuid);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             var result = await _characterService.UpdateCharacterAsync(id, updatedCharacterDto, userGuid);
             if (!result.IsSuccess)

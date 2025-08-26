@@ -147,7 +147,7 @@ namespace CharacterManagerApiTutorial.Services
 
             // Step 2: Validate userGuid.
             if (userGuid == Guid.Empty)
-                return Result<Character>.Failure("Invalid user ID.");
+                return Result.Failure("Invalid user ID.");
 
             // Step 3: Attempt to find the character by ID while ensuring it belongs to the authenticated user
             var existingCharacter = await _context.Characters
@@ -160,9 +160,9 @@ namespace CharacterManagerApiTutorial.Services
             // Step 5: Normalize and trim input strings once
             updatedCharacterDto.Name = updatedCharacterDto.Name.Trim().ToLower();
 
-            // Step 6: Validate name length (max 15 chars).
-            if (string.IsNullOrWhiteSpace(updatedCharacterDto.Name) || updatedCharacterDto.Name.Length > 15)
-                return Result.Failure("Name is invalid or exceeds 15 characters.");
+            // Step 6: Validate name length (min 3 chars and max 15 chars).
+            if (string.IsNullOrWhiteSpace(updatedCharacterDto.Name) || updatedCharacterDto.Name.Length < 3 || updatedCharacterDto.Name.Length > 15)
+                return Result.Failure("Name must be between 3 and 15 characters.");
 
             // Step 7: Validate level range.
             if (updatedCharacterDto.Level < 1 || updatedCharacterDto.Level > 50)
@@ -171,7 +171,7 @@ namespace CharacterManagerApiTutorial.Services
             // Step 8: Validate realm
             var isValidRealm = await ValidateRealm(updatedCharacterDto);
             if (!isValidRealm)
-                return Result<Character>.Failure("Invalid realm ID.");
+                return Result.Failure("Invalid realm ID.");
 
             // Step 9: Check for duplicate name+realm if either changed.
             if (!existingCharacter.Name.Equals(updatedCharacterDto.Name, StringComparison.OrdinalIgnoreCase) ||

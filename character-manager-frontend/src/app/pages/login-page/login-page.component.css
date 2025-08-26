@@ -1,18 +1,21 @@
+/* Styles for the form container */
 form {
-  max-width: 300px;
-  margin: 2rem auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  max-width: 300px; /* Limits the width of the form */
+  margin: 2rem auto; /* Centers the form horizontally and adds vertical spacing */
+  display: flex; /* Uses flexbox layout */
+  flex-direction: column; /* Stacks children vertically */
+  gap: 1rem; /* Adds spacing between form elements */
 }
 
+/* Styles for input fields */
 input {
-  padding: 0.5rem;
-  font-size: 1rem;
+  padding: 0.5rem; /* Adds padding inside the input for better usability */
+  font-size: 1rem; /* Sets readable font size */
 }
 
+/* Styles for buttons inside the form */
 button {
-  padding: 0.75rem;
-  font-size: 1rem;
-  cursor: pointer;
+  padding: 0.75rem; /* Adds padding inside the button for clickable area */
+  font-size: 1rem; /* Sets readable font size */
+  cursor: pointer; /* Changes cursor to pointer on hover */
 }

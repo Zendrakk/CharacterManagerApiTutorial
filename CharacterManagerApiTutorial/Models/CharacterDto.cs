@@ -5,6 +5,8 @@ namespace CharacterManagerApiTutorial.Models
     public class CharacterDto
     {
         public int Id { get; set; }
+        [Required]
+        [RegularExpression("^[A-Za-z]+$", ErrorMessage = "Name can only contain letters.")]
         [StringLength(15, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 15 characters.")]
         public required string Name { get; set; }
         [Range(1, 50, ErrorMessage = "Level must be between 1 and 50.")]

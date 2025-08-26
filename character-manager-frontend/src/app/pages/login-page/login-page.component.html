@@ -1,4 +1,7 @@
+<!-- Login form triggers onSubmit() when submitted -->
 <form (ngSubmit)="onSubmit()">
+
+  <!-- Username input field -->
   <div>
     <label for="username">Username: </label>
     <input
@@ -10,6 +13,7 @@
     />
   </div>
 
+  <!-- Password input field -->
   <div>
     <label for="password">Password: </label>
     <input
@@ -22,7 +26,10 @@
     />
   </div>
 
+  <!-- Submit button disabled if either username or password is empty -->
   <button type="submit" [disabled]="!userDto.username || !userDto.password">Login</button>
+
+  <!-- Error message displayed if login fails -->
   @if (error) {
     <div class="error">{{ error }}</div>
   }

@@ -14,62 +14,167 @@ h2 {
   width: 50%;  /* Table takes up 50% of the parent container’s width */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  /* Adds subtle shadow below and around the table */
 }
+
 .styled-table thead tr {
   background-color: #483434;  /* Dark brown background for the table header row */
   color: #ffffff;  /* White text color for header cells */
   text-align: left;  /* Align header text to the left */
 }
+
 .styled-table th,
 .styled-table td {
   padding: 12px 15px;  /* Adds 12px padding top/bottom and 15px left/right inside each cell */
   border: 1px solid #ddd;  /* Light gray border around each cell */
   text-align: center;  /* Centers text horizontally within each cell */
 }
-/* Add a light gray bottom border to each row in the table body */
+
 .styled-table tbody tr {
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd; /* Add a light gray bottom border to each row in the table body */
 }
-/* For the last row in the table body, use a thicker green bottom border for emphasis */
+
+/* Apply special styling to the last row of the table body */
 .styled-table tbody tr:last-of-type {
-  border-bottom: 2px solid #009879;
+  border-bottom: 2px solid #009879; /* Thicker green border at the bottom for visual emphasis */
 }
-/* When hovering over a table body row, change its background to light gray 
-   and show a pointer cursor to indicate it is clickable */
+
+/* When hovering over a table row inside the table body */
 .styled-table tbody tr:hover {
-  background-color: #f1f1f1;
-  cursor: pointer;
+  background-color: #f1f1f1; /* Light gray background to highlight the row */
+  cursor: pointer; /* Change cursor to pointer to suggest interactivity */
 }
+
+/* Styles for a selected table row */
 tr.selected {
-  background-color: #f0f8ff; /* highlight */
+  background-color: #f0f8ff; /* Apply a light blue background to highlight the selected row */
 }
+
+/* Styles for the logout button container */
 .logout-button {
-  display: flex; /* Use flexbox layout */
-  justify-content: center; /* Center child elements horizontally */
+  display: flex; /* Enable flexbox layout for alignment */
+  justify-content: center; /* Center the button horizontally within its container */
 }
+
+/* Styles for the delete button */
 .delete-button {
-  background-color: #d9534f;
-  border: none;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-  padding: 0.75rem;
-  font-size: 1rem;
+  background-color: #d9534f; /* Red background to indicate a destructive action */
+  border: none; /* Remove default border */
+  color: white; /* White text for contrast */
+  border-radius: 4px; /* Slightly rounded corners */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  padding: 0.75rem; /* Add space inside the button */
+  font-size: 1rem; /* Standard font size */
 }
+
+/* Hover effect for the delete button */
 .delete-button:hover {
-  background-color: #c9302c;
+  background-color: #c9302c; /* Darker red on hover to give visual feedback */
 }
+
+/* Styles for the edit button */
 .edit-button {
-  background-color: #ffffff;
-  border: 2px solid #ddd;
-  color: black;
-  border-radius: 4px;
-  cursor: pointer;
-  padding: 0.75rem;
-  font-size: 1rem;
+  background-color: #ffffff; /* White background for a clean look */
+  border: 2px solid #ddd; /* Light gray border for definition */
+  color: black; /* Black text for readability */
+  border-radius: 4px; /* Slightly rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  padding: 0.75rem; /* Internal padding for size and spacing */
+  font-size: 1rem; /* Standard font size */
 }
+
+/* Faction color theme (light side) */
 .faction-light {
-  color: #2c7be5; /* Blue */
+  color: #2c7be5; /* Blue to represent the light faction */
 }
+
+/* Faction color theme (dark side) */
 .faction-dark {
-  color: #dc3545; /* Red */
+  color: #dc3545; /* Red to represent the dark faction */
+}
+
+/* Styles for a loading message */
+.loading {
+  font-style: italic; /* Italic text to indicate a temporary/loading state */
+  color: gray; /* Neutral gray color for subtle emphasis */
+  margin-bottom: 1rem; /* Adds spacing below the message */
+}
+
+/* Base styles for alert messages */
+.alert {
+  padding: 0.75rem 1rem; /* Inner spacing for readability */
+  margin-bottom: 1rem; /* Space below the alert to separate from content */
+  border-radius: 6px; /* Rounded corners for a softer look */
+  border: 1px solid transparent; /* Transparent border, useful for variant styling */
+  font-weight: 500; /* Slightly bold text for emphasis */
+}
+
+/* Danger/error alert */
+.alert-danger {
+  background-color: #f8d7da;  /* light red background */
+  color: #721c24;             /* dark red text */
+  border-color: #f5c6cb;      /* red border */
+}
+
+/* Styles for a centered message box */
+.center-message {
+  margin-left: auto;  /* Automatically adjust left margin to help center horizontally */
+  margin-right: auto;  /* Automatically adjust right margin to help center horizontally */
+  text-align: center;  /* Center-aligns the text inside the box */
+  font-size: 1rem; /* Standard font size for readability */
+  padding: 1rem 2rem; /* Inner spacing (vertical: 1rem, horizontal: 2rem) */
+  border-radius: 6px; /* Rounded corners for a softer appearance */
+  max-width: 500px; /* Prevents message from stretching too wide */
+  min-width: 300px; /* Ensures the box doesn’t shrink too small */
+}
+
+/* Styles for a table cell that displays an error message */
+.error-cell {
+  text-align: center; /* Centers the error text horizontally */
+  font-weight: bold; /* Makes the error text stand out */
+  padding: 1rem; /* Adds space inside the cell for readability */
+}
+
+/* Styles for the retry button displayed after an error */
+.retry-btn {
+  margin-top: 1rem; /* Adds space above the button */
+  padding: 0.5rem 1rem; /* Adds padding inside the button for size and comfort */
+  background-color: #721c24; /* Dark red background for the button */
+  color: white; /* White text color for contrast */
+  border: none; /* Removes default button border */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer; /* Changes cursor to pointer on hover */
+}
+
+/* Hover state for retry button */
+.retry-btn:hover {
+  background-color: #501418; /* Darker red background when hovered */
+}
+
+/**
+ * Skeleton row styling for table placeholders.
+ */
+.skeleton-row {
+  height: 20px; /* Sets consistent row height to mimic table rows. */
+  width: 100%;  /* Ensures skeleton spans full cell width. */
+  background: linear-gradient( /* Uses a three-stop linear gradient to create a shimmering highlight effect. */
+    90deg,
+    #e0e0e0 25%, 
+    #f0f0f0 37%, 
+    #e0e0e0 63%
+  );
+  background-size: 400% 100%; /* Enlarged to 400% width so the gradient can smoothly "slide" across when animated. */
+  border-radius: 4px; /* Rounds the corners slightly for a softer look. */
+  animation: skeleton-loading 1.4s ease infinite; /* Applies the `skeleton-loading` keyframes to create the shimmer effect, looping infinitely with smooth easing. */
+  margin: 4px 0; /* Adds vertical spacing so stacked rows have breathing room. */ 
+}
+
+/**
+ * Skeleton loading animation for placeholder rows. Creates a shimmering effect by moving the background gradient from right to left continuously.
+ */
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 0; /* At 0%: background starts fully positioned to the right. */
+  }
+  100% {
+    background-position: -100% 0; /* At 100%: background shifts to the left, creating a "wipe" effect. */
+  }
 }

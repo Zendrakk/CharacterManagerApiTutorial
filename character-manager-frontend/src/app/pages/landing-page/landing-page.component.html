@@ -1,5 +1,20 @@
 <h2>Characters</h2>
 
+<!-- Loading indicator -->
+@if (characterService.loadingSignal()) {
+  <div class="center-message loading">Loading characters...</div>
+}
+
+<!-- Error banner -->
+@if (characterService.errorSignal()) {
+  <div class="center-message alert alert-danger" role="alert">
+    {{ characterService.errorSignal() }}
+    <div>
+      <button class="retry-btn" (click)="retryGetCharacters()">Retry</button>
+    </div>
+  </div>
+}
+
 <table class="styled-table">
   <thead>
     <tr>
@@ -13,13 +28,26 @@
     </tr>
   </thead>
   <tbody>
+    <!-- Skeletons while loading -->
     @if (characterService.loadingSignal()) {
-      <tr>Loading characters...</tr>
+      @for (_ of [].constructor(5); track $index) {
+        <tr>
+          <td colspan="7">
+            <div class="skeleton-row"></div>
+          </td>
+        </tr>
+      }
     }
-    @if (characterService.errorSignal()) {
-      <tr>Error: {{ characterService.errorSignal() }}</tr>
+    <!-- Error row (in addition to global alert) -->
+    @else if (characterService.errorSignal()) {
+      <tr>
+        <td colspan="7" class="error-cell">
+          Failed to load characters. Please try again.
+        </td>
+      </tr>
     }
-    @if (!characterService.loadingSignal() && !characterService.errorSignal() && characterService.characterDisplayDtosSignal().length > 0) {
+    <!-- Character list only shows if no error and not loading -->
+    @else {
       @for (char of characterService.characterDisplayDtosSignal(); track char.id) {
         <tr (click)="onSelect(char)" [class.selected]="selectedCharacterIdSignal() === char.id">
           <td><strong [ngClass]="getFactionClass(char.factionName)">{{ char.name | titlecase }}</strong></td>
@@ -38,15 +66,16 @@
   </tbody>
 </table>
 
-<!-- Logout button component -->
+<!-- ✅ Logout button component -->
 <div class="logout-button">
   <app-logout-button></app-logout-button>
 </div>
+
 
 <!-- Edit form appears when a character is selected -->
 @if (selectedCharacterIdSignal()) {
   <app-character-edit 
     [characterId]="selectedCharacterIdSignal()!"
-    (cancel)="selectedCharacterIdSignal.set(null)">
+    (cancel)="onSelect(null)">
   </app-character-edit>
 }
